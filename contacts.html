@@ -22,7 +22,6 @@
     };
   </script>
   <style>
-    /* ═══ BEM: header (общий для всех страниц) ═══ */
     .header { position:fixed;top:0;left:0;right:0;z-index:50;background-color:rgba(26,10,0,0.95);backdrop-filter:blur(8px);transition:box-shadow 0.3s; }
     .header--scrolled { box-shadow:0 2px 20px rgba(0,0,0,0.4); }
     .header__inner { max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:64px; }
@@ -36,8 +35,6 @@
     .header__cart:hover { background:#d4a96a; }
     .header__burger { display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px; }
     .header__burger-line { width:24px;height:2px;background:#d4a96a;border-radius:2px; }
-
-    /* ═══ BEM: page-hero (маленький хедер страницы) ═══ */
     .page-hero { background:#1a0a00;padding:7rem 0 4rem;position:relative;overflow:hidden; }
     .page-hero__bg { position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(59,26,0,0.5) 0%,transparent 60%); }
     .page-hero__inner { position:relative;max-width:1200px;margin:0 auto;padding:0 1.5rem; }
@@ -46,16 +43,10 @@
     .page-hero__title { font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(2rem,4vw,3.5rem);color:#f5efe6;line-height:1.1; }
     .page-hero__title em { color:#c8853a;font-style:italic; }
     .page-hero__sub { font-family:Lato,sans-serif;font-size:1rem;font-weight:300;color:#d4a96a;margin-top:0.75rem; }
-
-    /* ═══ BEM: section ═══ */
     .section { padding:5rem 0; }
     .section--warm { background:#f5efe6; }
     .section__inner { max-width:1200px;margin:0 auto;padding:0 1.5rem; }
-
-    /* ═══ BEM: contact-grid ═══ */
     .contact-grid { display:grid;grid-template-columns:3fr 2fr;gap:4rem;align-items:start; }
-
-    /* ═══ BEM: form ═══ */
     .form { background:white;padding:2.5rem;border-radius:4px;border:1px solid #ede0d0; }
     .form__title { font-family:'Playfair Display',serif;font-weight:900;font-size:1.75rem;color:#1a0a00;margin-bottom:0.5rem; }
     .form__subtitle { font-family:Lato,sans-serif;font-size:0.9rem;font-weight:300;color:#6b5540;margin-bottom:2rem;line-height:1.6; }
@@ -80,8 +71,6 @@
     .form__success-icon { font-size:2rem;margin-bottom:0.5rem; }
     .form__success-title { font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;margin-bottom:0.5rem; }
     .form__success-text { font-family:Lato,sans-serif;font-size:0.875rem;font-weight:300;color:#d4a96a; }
-
-    /* ═══ BEM: contact-info ═══ */
     .contact-info { display:flex;flex-direction:column;gap:2rem; }
     .contact-card { background:white;padding:1.75rem;border-radius:4px;border:1px solid #ede0d0; }
     .contact-card__icon { font-size:1.75rem;margin-bottom:0.75rem; }
@@ -89,15 +78,11 @@
     .contact-card__text { font-family:Lato,sans-serif;font-size:0.875rem;font-weight:300;color:#6b5540;line-height:1.7; }
     .contact-card__link { color:#c8853a;text-decoration:none;transition:color 0.2s; }
     .contact-card__link:hover { color:#3b1a00; }
-
-    /* Карта-заглушка */
     .map-placeholder { background:linear-gradient(135deg,#1a0a00,#2d1200);border-radius:4px;overflow:hidden;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;margin-top:2rem;border:1px solid #3b1a00; }
     .map-placeholder__pin { text-align:center;position:relative;z-index:1; }
     .map-placeholder__icon { font-size:2.5rem;display:block;margin-bottom:0.5rem; }
     .map-placeholder__label { font-family:Lato,sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#c8853a; }
     .map-placeholder__addr { font-family:Lato,sans-serif;font-size:0.875rem;font-weight:300;color:#d4a96a;margin-top:0.25rem; }
-
-    /* ═══ BEM: footer ═══ */
     .footer { background:#0d0500;padding:4rem 0 2rem; }
     .footer__inner { max-width:1200px;margin:0 auto;padding:0 1.5rem; }
     .footer__grid { display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,0.06); }
@@ -126,7 +111,6 @@
 </head>
 <body style="background:#fdf8f2;">
 
-  <!-- ═══════════════ HEADER ═══════════════ -->
   <header class="header" id="header">
     <div class="header__inner">
       <a href="index.html" class="header__logo" aria-label="Brew & Soul — на главную">
@@ -150,7 +134,6 @@
     </div>
   </header>
 
-  <!-- ═══════════════ PAGE HERO ═══════════════ -->
   <section class="page-hero" aria-label="Заголовок страницы">
     <div class="page-hero__bg"></div>
     <div class="page-hero__inner">
@@ -160,12 +143,10 @@
     </div>
   </section>
 
-  <!-- ═══════════════ MAIN CONTENT ═══════════════ -->
   <section class="section section--warm">
     <div class="section__inner">
       <div class="contact-grid">
 
-        <!-- Форма -->
         <div>
           <form class="form" id="feedbackForm" novalidate>
             <h2 class="form__title">Оставьте отзыв</h2>
@@ -220,8 +201,6 @@
             </div>
           </form>
         </div>
-
-        <!-- Контактные карточки -->
         <div class="contact-info" aria-label="Контактная информация">
           <div class="contact-card">
             <div class="contact-card__icon">📍</div>
@@ -262,27 +241,19 @@
               <a href="#" class="contact-card__link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5a3 3 0 00-2.1 2.1A31 31 0 000 12a31 31 0 00.5 5.8 3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1A31 31 0 0024 12a31 31 0 00-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg> YouTube: youtube.com/@brewandsoul</a>
             </p>
           </div>
-
-          <!-- Карта-заглушка -->
           <div class="map-placeholder" role="img" aria-label="Карта расположения офиса">
-            <!-- SVG-стилизованная карта -->
             <svg viewBox="0 0 400 225" width="100%" height="100%" style="position:absolute;inset:0;" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- Сетка улиц -->
               <line x1="0" y1="75" x2="400" y2="75" stroke="#3b1a00" stroke-width="8"/>
               <line x1="0" y1="150" x2="400" y2="150" stroke="#3b1a00" stroke-width="6"/>
               <line x1="120" y1="0" x2="120" y2="225" stroke="#3b1a00" stroke-width="6"/>
               <line x1="280" y1="0" x2="280" y2="225" stroke="#3b1a00" stroke-width="8"/>
-              <!-- Кварталы -->
               <rect x="130" y="85" width="140" height="55" fill="#2d1200" opacity="0.5" rx="2"/>
               <rect x="0" y="85" width="110" height="55" fill="#2d1200" opacity="0.3" rx="2"/>
               <rect x="290" y="85" width="110" height="55" fill="#2d1200" opacity="0.3" rx="2"/>
-              <!-- Метки улиц -->
               <text x="200" y="68" text-anchor="middle" font-family="Lato" font-size="8" fill="#d4a96a" opacity="0.7">просп. Вернадского</text>
-              <!-- Маркер -->
               <circle cx="200" cy="112" r="14" fill="#c8853a" opacity="0.3"/>
               <circle cx="200" cy="112" r="8" fill="#c8853a"/>
               <circle cx="200" cy="112" r="4" fill="#1a0a00"/>
-              <!-- Пульсация -->
               <circle cx="200" cy="112" r="14" fill="none" stroke="#c8853a" stroke-width="2" opacity="0.6">
                 <animate attributeName="r" values="14;24;14" dur="2s" repeatCount="indefinite"/>
                 <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
@@ -298,7 +269,6 @@
     </div>
   </section>
 
-  <!-- ═══════════════ FOOTER ═══════════════ -->
   <footer class="footer">
     <div class="footer__inner">
       <div class="footer__grid">
@@ -347,13 +317,11 @@
   </footer>
 
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    // Header scroll
     const header = document.getElementById('header');
     window.addEventListener('scroll', () => {
       header.classList.toggle('header--scrolled', window.scrollY > 20);
     });
 
-    // Burger
     const burger = document.getElementById('burgerBtn');
     const nav    = document.querySelector('.header__nav');
     burger.addEventListener('click', () => {
@@ -367,14 +335,13 @@
       burger.setAttribute('aria-expanded', String(!open));
     });
 
-    // Форма — эмуляция отправки
     document.getElementById('feedbackForm').addEventListener('submit'), function(e){
       e.preventDefault();
       const form    = this;
       const success = document.getElementById('formSuccess');
       const btn     = form.querySelector('.form__submit');
     }
-      // Простая валидация
+
       if (!form.checkValidity()) { form.reportValidity(); return; }
 
       btn.textContent = 'Отправляем...';

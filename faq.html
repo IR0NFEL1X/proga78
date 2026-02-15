@@ -19,7 +19,6 @@
     };
   </script>
   <style>
-    /* ═══ BEM: header ═══ */
     .header{position:fixed;top:0;left:0;right:0;z-index:50;background-color:rgba(26,10,0,0.95);backdrop-filter:blur(8px);transition:box-shadow 0.3s;}
     .header--scrolled{box-shadow:0 2px 20px rgba(0,0,0,0.4);}
     .header__inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:64px;}
@@ -33,8 +32,6 @@
     .header__cart:hover{background:#d4a96a;}
     .header__burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}
     .header__burger-line{width:24px;height:2px;background:#d4a96a;border-radius:2px;}
-
-    /* ═══ BEM: page-hero ═══ */
     .page-hero{background:#1a0a00;padding:7rem 0 4rem;position:relative;overflow:hidden;}
     .page-hero__bg{position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(59,26,0,0.5) 0%,transparent 60%);}
     .page-hero__inner{position:relative;max-width:1200px;margin:0 auto;padding:0 1.5rem;}
@@ -43,21 +40,15 @@
     .page-hero__title{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(2rem,4vw,3.5rem);color:#f5efe6;line-height:1.1;}
     .page-hero__title em{color:#c8853a;font-style:italic;}
     .page-hero__sub{font-family:Lato,sans-serif;font-size:1rem;font-weight:300;color:#d4a96a;margin-top:0.75rem;}
-
-    /* ═══ BEM: section ═══ */
     .section{padding:5rem 0;}
     .section--warm{background:#f5efe6;}
     .section--mid{background:#fdf8f2;}
     .section--dark{background:#1a0a00;}
     .section__inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;}
-
-    /* ═══ BEM: faq ═══ */
     .faq{max-width:800px;margin:0 auto;}
     .faq__category{margin-bottom:3rem;}
     .faq__category-title{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:#1a0a00;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.75rem;padding-bottom:0.75rem;border-bottom:1px solid #ede0d0;}
     .faq__category-icon{font-size:1.25rem;}
-
-    /* ═══ BEM: accordion ═══ */
     .accordion{display:flex;flex-direction:column;gap:0.5rem;}
     .accordion__item{background:white;border:1px solid #ede0d0;border-radius:4px;overflow:hidden;transition:border-color 0.2s;}
     .accordion__item--open{border-color:#c8853a;}
@@ -72,22 +63,16 @@
     .accordion__answer{font-family:Lato,sans-serif;font-size:0.9rem;font-weight:300;color:#6b5540;line-height:1.8;padding:0 1.5rem 1.5rem;}
     .accordion__answer a{color:#c8853a;text-decoration:underline;}
     .accordion__answer strong{font-weight:700;color:#1a0a00;}
-
-    /* ═══ BEM: search-box ═══ */
     .search-box{max-width:500px;margin:0 auto 3rem;position:relative;}
     .search-box__input{width:100%;font-family:Lato,sans-serif;font-size:0.95rem;font-weight:300;color:#1a0a00;background:white;border:1px solid #ede0d0;border-radius:2px;padding:0.9rem 1rem 0.9rem 3rem;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
     .search-box__input:focus{border-color:#c8853a;box-shadow:0 0 0 3px rgba(200,133,58,0.1);}
     .search-box__icon{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:#c8853a;pointer-events:none;font-size:1rem;}
     .search-box__clear{position:absolute;right:1rem;top:50%;transform:translateY(-50%);background:none;border:none;color:#6b5540;cursor:pointer;font-size:0.75rem;display:none;padding:4px;}
-
-    /* ═══ BEM: faq-cta ═══ */
     .faq-cta{background:white;border:1px solid #ede0d0;border-radius:4px;padding:2.5rem;text-align:center;margin-top:3rem;}
     .faq-cta__title{font-family:'Playfair Display',serif;font-weight:700;font-size:1.35rem;color:#1a0a00;margin-bottom:0.75rem;}
     .faq-cta__text{font-family:Lato,sans-serif;font-size:0.9rem;font-weight:300;color:#6b5540;margin-bottom:1.5rem;line-height:1.7;}
     .faq-cta__btn{font-family:Lato,sans-serif;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;font-size:0.8rem;background:#1a0a00;color:#f5efe6;padding:0.85rem 2rem;border-radius:2px;text-decoration:none;display:inline-block;transition:background 0.2s;}
     .faq-cta__btn:hover{background:#c8853a;color:#1a0a00;}
-
-    /* ═══ BEM: footer ═══ */
     .footer{background:#0d0500;padding:4rem 0 2rem;}
     .footer__inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;}
     .footer__grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,0.06);}
@@ -102,8 +87,6 @@
     .footer__link:hover{color:#d4a96a;}
     .footer__bottom{display:flex;align-items:center;justify-content:space-between;padding-top:2rem;flex-wrap:wrap;gap:1rem;}
     .footer__copy{font-family:Lato,sans-serif;font-size:0.75rem;font-weight:300;color:#4a3020;letter-spacing:0.05em;}
-
-    /* No-results */
     .no-results{text-align:center;padding:2rem;display:none;}
     .no-results__icon{font-size:2rem;display:block;margin-bottom:0.5rem;}
     .no-results__text{font-family:Lato,sans-serif;font-size:0.9rem;color:#6b5540;}
@@ -119,7 +102,6 @@
 </head>
 <body style="background:#fdf8f2;">
 
-  <!-- ═══════════════ HEADER ═══════════════ -->
   <header class="header" id="header">
     <div class="header__inner">
       <a href="index.html" class="header__logo" aria-label="Brew & Soul — на главную">
@@ -143,7 +125,6 @@
     </div>
   </header>
 
-  <!-- ═══════════════ PAGE HERO ═══════════════ -->
   <section class="page-hero" aria-label="Заголовок страницы">
     <div class="page-hero__bg"></div>
     <div class="page-hero__inner">
@@ -152,12 +133,8 @@
       <p class="page-hero__sub">Всё, что вы хотели знать о нашем кофе и сервисе</p>
     </div>
   </section>
-
-  <!-- ═══════════════ FAQ CONTENT ═══════════════ -->
   <section class="section section--warm" aria-label="FAQ">
     <div class="section__inner">
-
-      <!-- Поиск по FAQ -->
       <div class="search-box">
         <span class="search-box__icon" aria-hidden="true">🔍</span>
         <input
@@ -172,8 +149,6 @@
       </div>
 
       <div class="faq" id="faqContainer" role="region" aria-label="Список вопросов и ответов">
-
-        <!-- Категория: Заказы и оплата -->
         <div class="faq__category" data-category="orders">
           <h2 class="faq__category-title">
             <span class="faq__category-icon" aria-hidden="true">🛒</span>
@@ -222,8 +197,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Категория: Доставка -->
         <div class="faq__category" data-category="delivery">
           <h2 class="faq__category-title">
             <span class="faq__category-icon" aria-hidden="true">🚚</span>
@@ -262,8 +235,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Категория: Кофе и обжарка -->
         <div class="faq__category" data-category="coffee">
           <h2 class="faq__category-title">
             <span class="faq__category-icon" aria-hidden="true">☕</span>
@@ -312,8 +283,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Категория: Подписка -->
         <div class="faq__category" data-category="subscription">
           <h2 class="faq__category-title">
             <span class="faq__category-icon" aria-hidden="true">📦</span>
@@ -343,13 +312,10 @@
           </div>
         </div>
 
-        <!-- Блок "не нашли ответ" -->
         <div class="no-results" id="noResults" role="alert">
           <span class="no-results__icon">🤔</span>
           <p class="no-results__text">По вашему запросу ничего не найдено</p>
         </div>
-
-        <!-- CTA -->
         <div class="faq-cta">
           <h3 class="faq-cta__title">Не нашли ответ на свой вопрос?</h3>
           <p class="faq-cta__text">Мы готовы помочь! Напишите нам — ответим в течение нескольких часов.</p>
@@ -359,8 +325,6 @@
       </div>
     </div>
   </section>
-
-  <!-- ═══════════════ FOOTER ═══════════════ -->
   <footer class="footer">
     <div class="footer__inner">
       <div class="footer__grid">
@@ -409,13 +373,10 @@
   </footer>
 
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    // ── Header scroll ──
     const header = document.getElementById('header');
     window.addEventListener('scroll', () => {
       header.classList.toggle('header--scrolled', window.scrollY > 20);
     });
-
-    // ── Burger ──
     const burger = document.getElementById('burgerBtn');
     const nav    = document.querySelector('.header__nav');
     burger.addEventListener('click', () => {
@@ -428,38 +389,30 @@
       nav.style.padding = '1rem 1.5rem';
       burger.setAttribute('aria-expanded', String(!open));
     });
-
-    // ── Аккордеон ──
     document.querySelectorAll('.accordion__trigger').forEach(btn => {
       btn.addEventListener('click', () => {
         const item    = btn.closest('.accordion__item');
         const isOpen  = item.classList.contains('accordion__item--open');
-        // Закрыть все в той же категории
         btn.closest('.accordion').querySelectorAll('.accordion__item').forEach(i => {
           i.classList.remove('accordion__item--open');
           i.querySelector('.accordion__trigger').setAttribute('aria-expanded', 'false');
         });
-        // Открыть текущий (если не был открыт)
         if (!isOpen) {
           item.classList.add('accordion__item--open');
           btn.setAttribute('aria-expanded', 'true');
         }
       });
-
-      // Клавиатурный доступ
       btn.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
       });
     });
-
-    // ── Поиск по FAQ ──
     const searchInput = document.getElementById('faqSearch');
     const clearBtn    = document.getElementById('searchClear');
     const noResults   = document.getElementById('noResults');
 
     function filterFAQ(query) {
       const q = query.toLowerCase().trim();
-      let totalVisible = 0;
+      let totalVisible = 0;}
 
       document.querySelectorAll('.accordion__item').forEach(item => {
         const question = item.querySelector('.accordion__question').textContent.toLowerCase();
@@ -468,9 +421,7 @@
         item.style.display = match ? '' : 'none';
         if (match) totalVisible++;
       });
-
-      // Скрывать категории без видимых вопросов
       document.querySelectorAll('.faq__category').forEach(cat => {
         const visible = [...cat.querySelectorAll('.accordion__item')].some(i => i.style.display !== 'none');
-        cat.style.display = visible ? '' : 'none';
+        cat.style.display = visible ? '' : 'none';})
   
