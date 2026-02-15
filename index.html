@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brew & Soul — Онлайн-магазин кофе</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            espresso: '#1a0a00',
+            roast:    '#3b1a00',
+            crema:    '#c8853a',
+            latte:    '#d4a96a',
+            foam:     '#f5efe6',
+            steam:    '#fdf8f2',
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', 'serif'],
+            body:    ['Lato', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* ───────── BEM-базовые стили ───────── */
+
+    /* Блок: header */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      background-color: rgba(26,10,0,0.95);
+      backdrop-filter: blur(8px);
+      transition: box-shadow 0.3s;
+    }
+    .header--scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.4); }
+
+    .header__inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; height: 64px;
+    }
+
+    .header__logo { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+    .header__logo-mark {
+      width: 36px; height: 36px; background: #c8853a;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-weight: 900; color: #1a0a00; font-size: 1rem;
+    }
+    .header__logo-text {
+      font-family: 'Playfair Display', serif; font-weight: 700;
+      font-size: 1.25rem; color: #f5efe6; letter-spacing: 0.03em;
+    }
+
+    .header__nav { display: flex; gap: 0; }
+    .header__nav-link {
+      font-family: Lato, sans-serif; font-size: 0.875rem; font-weight: 400;
+      color: #d4a96a; text-decoration: none; padding: 0.5rem 1rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .header__nav-link:hover,
+    .header__nav-link--active { color: #f5efe6; }
+
+    .header__cart {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-family: Lato, sans-serif; font-size: 0.875rem; font-weight: 700;
+      color: #1a0a00; background: #c8853a; border: none; cursor: pointer;
+      padding: 0.5rem 1.25rem; border-radius: 2px;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      transition: background 0.2s;
+    }
+    .header__cart:hover { background: #d4a96a; }
+
+    .header__burger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .header__burger-line { width: 24px; height: 2px; background: #d4a96a; border-radius: 2px; }
+
+    /* Блок: hero */
+    .hero {
+      min-height: 100vh; background-color: #1a0a00;
+      display: flex; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .hero__bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(59,26,0,0.7) 0%, transparent 70%),
+                  linear-gradient(135deg, #1a0a00 0%, #2d1200 50%, #1a0a00 100%);
+    }
+    .hero__grain {
+      position: absolute; inset: 0; opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px;
+    }
+    .hero__content {
+      position: relative; max-width: 1200px; margin: 0 auto;
+      padding: 0 1.5rem; padding-top: 80px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    }
+    .hero__eyebrow {
+      font-family: Lato, sans-serif; font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; color: #c8853a;
+      margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem;
+    }
+    .hero__eyebrow::before {
+      content: ''; display: block; width: 32px; height: 1px; background: #c8853a;
+    }
+    .hero__title {
+      font-family: 'Playfair Display', serif; font-weight: 900;
+      font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1;
+      color: #f5efe6; margin-bottom: 1.5rem;
+    }
+    .hero__title em { font-style: italic; color: #c8853a; }
+    .hero__subtitle {
+      font-family: Lato, sans-serif; font-size: 1.1rem; font-weight: 300;
+      color: #d4a96a; line-height: 1.8; margin-bottom: 2.5rem; max-width: 460px;
+    }
+    .hero__actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    /* Блок: btn */
+    .btn {
+      font-family: Lato, sans-serif; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; font-size: 0.8rem; text-decoration: none;
+      padding: 0.9rem 2rem; border-radius: 2px; border: none; cursor: pointer;
+      transition: all 0.2s; display: inline-block;
+    }
+    .btn--primary { background: #c8853a; color: #1a0a00; }
+    .btn--primary:hover { background: #d4a96a; transform: translateY(-1px); }
+    .btn--outline { background: transparent; color: #f5efe6; border: 1px solid rgba(245,239,230,0.3); }
+    .btn--outline:hover { border-color: #c8853a; color: #c8853a; }
+
+    /* Hero visual */
+    .hero__visual {
+      display: flex; justify-content: center; align-items: center;
+      position: relative;
+    }
+    .hero__cup-wrapper {
+      width: 320px; height: 320px; position: relative;
+    }
+    .hero__cup-glow {
+      position: absolute; inset: -20px;
+      background: radial-gradient(circle, rgba(200,133,58,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: glow-pulse 3s ease-in-out infinite;
+    }
+    .hero__cup-svg { width: 100%; height: 100%; }
+
+    .hero__stats {
+      position: absolute; bottom: 2rem; right: 0;
+      display: flex; gap: 2rem;
+    }
+    .hero__stat { text-align: center; }
+    .hero__stat-number {
+      font-family: 'Playfair Display', serif; font-weight: 900;
+      font-size: 1.75rem; color: #f5efe6; display: block;
+    }
+    .hero__stat-label {
+      font-family: Lato, sans-serif; font-size: 0.7rem; font-weight: 400;
+      color: #d4a96a; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+
+    /* Блок: section */
+    .section { padding: 6rem 0; }
+    .section--dark { background: #1a0a00; }
+    .section--warm { background: #f5efe6; }
+    .section--mid { background: #fdf8f2; }
+    .section__inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+    .section__header { text-align: center; margin-bottom: 4rem; }
+    .section__eyebrow {
+      font-family: Lato, sans-serif; font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; color: #c8853a;
+      display: block; margin-bottom: 1rem;
+    }
+    .section__title {
+      font-family: 'Playfair Display', serif; font-weight: 900;
+      font-size: clamp(1.8rem, 3vw, 2.5rem); color: #1a0a00; line-height: 1.2;
+    }
+    .section__title--light { color: #f5efe6; }
+    .section__subtitle {
+      font-family: Lato, sans-serif; font-size: 1rem; font-weight: 300;
+      color: #6b5540; margin-top: 1rem; line-height: 1.8;
+    }
+    .section__subtitle--light { color: #d4a96a; }
+
+    /* Блок: card */
+    .card {
+      background: white; border-radius: 4px;
+      overflow: hidden; transition: transform 0.3s, box-shadow 0.3s;
+      border: 1px solid #ede0d0;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(26,10,0,0.12); }
+    .card--featured { border-color: #c8853a; position: relative; }
+    .card--featured::before {
+      content: 'Хит'; position: absolute; top: 1rem; right: 1rem;
+      background: #c8853a; color: #1a0a00; font-family: Lato, sans-serif;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 2px; z-index: 1;
+    }
+
+    .card__image {
+      width: 100%; aspect-ratio: 4/3; object-fit: cover;
+      background: linear-gradient(135deg, #2d1200, #3b1a00);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card__image-placeholder { font-size: 4rem; }
+    .card__body { padding: 1.5rem; }
+    .card__origin {
+      font-family: Lato, sans-serif; font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase; color: #c8853a; margin-bottom: 0.5rem;
+    }
+    .card__title {
+      font-family: 'Playfair Display', serif; font-weight: 700;
+      font-size: 1.2rem; color: #1a0a00; margin-bottom: 0.5rem; line-height: 1.3;
+    }
+    .card__desc {
+      font-family: Lato, sans-serif; font-size: 0.875rem; font-weight: 300;
+      color: #6b5540; line-height: 1.6; margin-bottom: 1.25rem;
+    }
+    .card__footer { display: flex; align-items: center; justify-content: space-between; }
+    .card__price {
+      font-family: 'Playfair Display', serif; font-weight: 700;
+      font-size: 1.35rem; color: #1a0a00;
+    }
+    .card__price-unit {
+      font-family: Lato, sans-serif; font-size: 0.75rem; font-weight: 400;
+      color: #6b5540; margin-left: 0.25rem;
+    }
+    .card__btn {
+      font-family: Lato, sans-serif; font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      background: #1a0a00; color: #f5efe6;
+      padding: 0.6rem 1.1rem; border-radius: 2px; border: none; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .card__btn:hover { background: #c8853a; color: #1a0a00; }
+
+    /* Роастинг нотки */
+    .card__notes { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .card__note {
+      font-family: Lato, sans-serif; font-size: 0.7rem; font-weight: 400;
+      background: #f5efe6; color: #6b5540; padding: 0.2rem 0.6rem;
+      border-radius: 20px; border: 1px solid #ede0d0;
+    }
+
+    /* Блок: feature */
+    .feature { text-align: center; padding: 2rem 1.5rem; }
+    .feature__icon {
+      width: 64px; height: 64px; background: rgba(200,133,58,0.1);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem; font-size: 1.75rem;
+      border: 1px solid rgba(200,133,58,0.3);
+    }
+    .feature__title {
+      font-family: 'Playfair Display', serif; font-weight: 700;
+      font-size: 1.1rem; color: #f5efe6; margin-bottom: 0.75rem;
+    }
+    .feature__text {
+      font-family: Lato, sans-serif; font-size: 0.875rem; font-weight: 300;
+      color: #d4a96a; line-height: 1.7;
+    }
+
+    /* Блок: testimonial */
+    .testimonial {
+      background: white; padding: 2rem; border-radius: 4px;
+      border: 1px solid #ede0d0; position: relative;
+    }
+    .testimonial::before {
+      content: '"'; font-family: 'Playfair Display', serif; font-weight: 900;
+      font-size: 5rem; color: #c8853a; position: absolute; top: -0.5rem; left: 1.25rem;
+      line-height: 1; opacity: 0.3;
+    }
+    .testimonial__text {
+      font-family: Lato, sans-serif; font-size: 0.95rem; font-weight: 300;
+      color: #3b1a00; line-height: 1.8; margin-bottom: 1.5rem;
+      padding-top: 1.5rem;
+    }
+    .testimonial__author { display: flex; align-items: center; gap: 0.75rem; }
+    .testimonial__avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, #c8853a, #3b1a00);
+      display: flex; align-items: center; justify-content: center;
+      font-family: Lato, sans-serif; font-weight: 700; color: #f5efe6; font-size: 0.875rem;
+    }
+    .testimonial__name {
+      font-family: Lato, sans-serif; font-weight: 700;
+      font-size: 0.875rem; color: #1a0a00;
+    }
+    .testimonial__role {
+      font-family: Lato, sans-serif; font-size: 0.75rem; font-weight: 300; color: #6b5540;
+    }
+    .testimonial__stars { color: #c8853a; font-size: 0.75rem; margin-top: 0.1rem; }
+
+    /* Блок: cta */
+    .cta {
+      background: linear-gradient(135deg, #3b1a00 0%, #1a0a00 100%);
+      padding: 5rem 0; text-align: center; position: relative; overflow: hidden;
+    }
+    .cta::before {
+      content: '';
+      position: absolute; top: -50%; left: -20%;
+      width: 60%; height: 200%;
+      background: radial-gradient(ellipse, rgba(200,133,58,0.08) 0%, transparent 60%);
+    }
+    .cta__inner { position: relative; max-width: 640px; margin: 0 auto; padding: 0 1.5rem; }
+    .cta__title {
+      font-family: 'Playfair Display', serif; font-weight: 900;
+      font-size: clamp(2rem, 4vw, 3rem); color: #f5efe6; margin-bottom: 1rem; line-height: 1.2;
+    }
+    .cta__title em { color: #c8853a; font-style: italic; }
+    .cta__text {
+      font-family: Lato, sans-serif; font-size: 1rem; font-weight: 300;
+      color: #d4a96a; line-height: 1.8; margin-bottom: 2.5rem;
+    }
+
+    /* Блок: footer */
+    .footer { background: #0d0500; padding: 4rem 0 2rem; }
+    .footer__inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+    .footer__grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem;
+      padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .footer__brand-title {
+      font-family: 'Playfair Display', serif; font-weight: 700;
+      font-size: 1.25rem; color: #f5efe6; margin-bottom: 0.75rem;
+    }
+    .footer__brand-text {
+      font-family: Lato, sans-serif; font-size: 0.875rem; font-weight: 300;
+      color: #6b5540; line-height: 1.7; margin-bottom: 1.5rem; max-width: 260px;
+    }
+    .footer__socials { display: flex; gap: 0.75rem; }
+    .footer__social {
+      width: 36px; height: 36px; border: 1px solid rgba(200,133,58,0.3); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #c8853a; font-size: 0.75rem; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .footer__social:hover { background: #c8853a; color: #1a0a00; border-color: #c8853a; }
+
+    .footer__col-title {
+      font-family: Lato, sans-serif; font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase; color: #c8853a;
+      margin-bottom: 1.25rem;
+    }
+    .footer__links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+    .footer__link {
+      font-family: Lato, sans-serif; font-size: 0.875rem; font-weight: 300;
+      color: #6b5540; text-decoration: none; transition: color 0.2s;
+    }
+    .footer__link:hover { color: #d4a96a; }
+
+    .footer__bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 2rem; flex-wrap: wrap; gap: 1rem;
+    }
+    .footer__copy {
+      font-family: Lato, sans-serif; font-size: 0.75rem; font-weight: 300;
+      color: #4a3020; letter-spacing: 0.05em;
+    }
+
+    /* Карточки продуктов — сетка */
+    .products-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+    }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+    }
+    .testimonials-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+    }
+
+    /* Мобильная адаптация */
+    @media (max-width: 768px) {
+      .hero__content { grid-template-columns: 1fr; gap: 2rem; padding-top: 100px; }
+      .hero__visual { display: none; }
+      .hero__stats { position: static; justify-content: flex-start; }
+      .products-grid { grid-template-columns: 1fr 1fr; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .footer__grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+      .header__nav { display: none; }
+      .header__burger { display: flex; }
+      .header__cart span { display: none; }
+    }
+    @media (max-width: 480px) {
+      .products-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .footer__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body style="background:#fdf8f2;">
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo" aria-label="Brew & Soul — на главную">
+        <div class="header__logo-mark">B</div>
+        <span class="header__logo-text">Brew & Soul</span>
+      </a>
+
+      <nav class="header__nav" aria-label="Основная навигация">
+        <a href="index.html"    class="header__nav-link header__nav-link--active">Главная</a>
+        <a href="contacts.html" class="header__nav-link">Контакты</a>
+        <a href="faq.html"      class="header__nav-link">FAQ</a>
+      </nav>
+
+      <button class="header__cart" aria-label="Корзина">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span>Корзина</span>
+      </button>
+
+      <button class="header__burger" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false">
+        <span class="header__burger-line"></span>
+        <span class="header__burger-line"></span>
+        <span class="header__burger-line"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <section class="hero" aria-label="Главный баннер">
+    <div class="hero__bg"></div>
+    <div class="hero__grain"></div>
+    <div class="hero__content">
+      <div class="hero__copy">
+        <p class="hero__eyebrow">Свежеобжаренный кофе</p>
+        <h1 class="hero__title">
+          Каждая чашка —<br>это <em>история</em>
+        </h1>
+        <p class="hero__subtitle">
+          Отборные зёрна со всего мира. Обжариваем на малой партии, доставляем прямо к вашей двери в течение 48 часов после обжарки.
+        </p>
+        <div class="hero__actions">
+          <a href="#catalog" class="btn btn--primary">Выбрать кофе</a>
+          <a href="faq.html" class="btn btn--outline">Как это работает</a>
+        </div>
+
+        <div class="hero__stats" style="position:static;margin-top:3rem;">
+          <div class="hero__stat">
+            <span class="hero__stat-number">48+</span>
+            <span class="hero__stat-label">сортов</span>
+          </div>
+          <div class="hero__stat">
+            <span class="hero__stat-number">12</span>
+            <span class="hero__stat-label">стран</span>
+          </div>
+          <div class="hero__stat">
+            <span class="hero__stat-number">4.9★</span>
+            <span class="hero__stat-label">рейтинг</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__visual" aria-hidden="true">
+        <div class="hero__cup-wrapper">
+          <div class="hero__cup-glow"></div>
+          <!-- SVG кофейная чашка -->
+          <svg class="hero__cup-svg" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Пар -->
+            <path d="M120 60 Q115 45 120 30 Q125 15 120 0" stroke="#c8853a" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.5">
+              <animate attributeName="d" values="M120 60 Q115 45 120 30 Q125 15 120 0;M120 60 Q125 45 120 30 Q115 15 120 0;M120 60 Q115 45 120 30 Q125 15 120 0" dur="2s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.5;0.2;0.5" dur="2s" repeatCount="indefinite"/>
+            </path>
+            <path d="M160 55 Q155 40 160 25 Q165 10 160 0" stroke="#c8853a" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6">
+              <animate attributeName="d" values="M160 55 Q155 40 160 25 Q165 10 160 0;M160 55 Q165 40 160 25 Q155 10 160 0;M160 55 Q155 40 160 25 Q165 10 160 0" dur="2.5s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2.5s" repeatCount="indefinite"/>
+            </path>
+            <path d="M200 60 Q195 45 200 30 Q205 15 200 0" stroke="#c8853a" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4">
+              <animate attributeName="d" values="M200 60 Q195 45 200 30 Q205 15 200 0;M200 60 Q205 45 200 30 Q195 15 200 0;M200 60 Q195 45 200 30 Q205 15 200 0" dur="1.8s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.4;0.15;0.4" dur="1.8s" repeatCount="indefinite"/>
+            </path>
+
+            <!-- Блюдце -->
+            <ellipse cx="160" cy="272" rx="100" ry="14" fill="#3b1a00"/>
+            <ellipse cx="160" cy="268" rx="108" ry="16" fill="#2d1200"/>
+            <ellipse cx="160" cy="265" rx="110" ry="17" fill="#3b1a00"/>
+
+            <!-- Чашка — тело -->
+            <path d="M80 120 Q78 220 100 255 Q130 275 160 275 Q190 275 220 255 Q242 220 240 120 Z" fill="#2d1200"/>
+            <!-- Внутри чашки — кофе -->
+            <ellipse cx="160" cy="122" rx="78" ry="18" fill="#1a0a00"/>
+            <!-- Крема/пенка -->
+            <ellipse cx="160" cy="120" rx="76" ry="16" fill="#c8853a" opacity="0.7"/>
+            <ellipse cx="155" cy="119" rx="50" ry="10" fill="#d4a96a" opacity="0.5"/>
+            <!-- Блик на чашке -->
+            <path d="M95 145 Q90 190 96 230" stroke="rgba(255,255,255,0.07)" stroke-width="8" stroke-linecap="round" fill="none"/>
+            <!-- Ободок чашки -->
+            <ellipse cx="160" cy="120" rx="80" ry="18" fill="none" stroke="#3b1a00" stroke-width="4"/>
+            <!-- Ручка -->
+            <path d="M238 155 Q290 155 290 185 Q290 215 238 215" stroke="#3b1a00" stroke-width="14" stroke-linecap="round" fill="none"/>
+            <path d="M238 155 Q282 155 282 185 Q282 215 238 215" stroke="#2d1200" stroke-width="8" stroke-linecap="round" fill="none"/>
+            <!-- Логотип на чашке -->
+            <text x="160" y="200" text-anchor="middle" font-family="Playfair Display, serif" font-size="22" fill="#c8853a" opacity="0.4" font-style="italic">B&amp;S</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ О ПРОЕКТЕ ═══════════════ -->
+  <section class="section section--warm" aria-labelledby="about-title">
+    <div class="section__inner">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;">
+        <div>
+          <span class="section__eyebrow">О нас</span>
+          <h2 class="section__title" id="about-title">Мы одержимы<br>хорошим кофе</h2>
+          <p style="font-family:Lato,sans-serif;font-weight:300;color:#6b5540;line-height:1.9;margin-top:1.25rem;font-size:1rem;">
+            Brew & Soul — это небольшая обжарочня из Санкт-Петербурга. Мы сами объезжаем фермы в Эфиопии, Колумбии, Гватемале и Кении, чтобы лично отобрать лучшие зёрна. Обжарка происходит малыми партиями дважды в неделю.
+          </p>
+          <p style="font-family:Lato,sans-serif;font-weight:300;color:#6b5540;line-height:1.9;margin-top:1rem;font-size:1rem;">
+            Мы верим: хороший кофе начинается с хорошего фермера. Поэтому 5% от каждой продажи идёт напрямую на поддержку кофейных хозяйств.
+          </p>
+          <div style="display:flex;gap:2rem;margin-top:2.5rem;">
+            <div>
+              <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:#1a0a00;">2025</div>
+              <div style="font-family:Lato,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#6b5540;">Год основания</div>
+            </div>
+            <div>
+              <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:#1a0a00;">12</div>
+              <div style="font-family:Lato,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#6b5540;">Стран-производителей</div>
+            </div>
+            <div>
+              <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:#1a0a00;">3200+</div>
+              <div style="font-family:Lato,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#6b5540;">Постоянных клиентов</div>
+            </div>
+          </div>
+        </div>
+        <div style="position:relative;">
+          <div style="background:linear-gradient(135deg,#2d1200,#3b1a00);border-radius:4px;aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;">
+            <div style="position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(200,133,58,0.2),transparent 60%);"></div>
+            <!-- Иллюстрация мешка кофе -->
+            <svg viewBox="0 0 220 280" width="220" height="280" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="40" y="60" width="140" height="180" rx="8" fill="#1a0a00"/>
+              <rect x="50" y="70" width="120" height="160" rx="6" fill="#2d1200"/>
+              <rect x="70" y="40" width="80" height="35" rx="4" fill="#3b1a00"/>
+              <rect x="80" y="30" width="60" height="20" rx="3" fill="#c8853a" opacity="0.8"/>
+              <text x="110" y="44" text-anchor="middle" font-family="Lato" font-size="9" font-weight="700" fill="#1a0a00" letter-spacing="1">COFFEE</text>
+              <text x="110" y="145" text-anchor="middle" font-family="Playfair Display" font-size="26" font-weight="900" fill="#c8853a" font-style="italic">B&amp;S</text>
+              <text x="110" y="168" text-anchor="middle" font-family="Lato" font-size="9" fill="#d4a96a" letter-spacing="2">SPECIALTY</text>
+              <circle cx="110" cy="190" r="18" fill="none" stroke="#c8853a" stroke-width="1" opacity="0.5"/>
+              <text x="110" y="194" text-anchor="middle" font-family="Lato" font-size="7" fill="#d4a96a">1kg</text>
+              <line x1="60" y1="100" x2="160" y2="100" stroke="#c8853a" stroke-width="0.5" opacity="0.3"/>
+              <line x1="60" y1="220" x2="160" y2="220" stroke="#c8853a" stroke-width="0.5" opacity="0.3"/>
+            </svg>
+          </div>
+          <div style="position:absolute;bottom:-1.5rem;right:-1.5rem;background:#c8853a;color:#1a0a00;padding:1.25rem 1.5rem;border-radius:4px;font-family:'Playfair Display',serif;text-align:center;">
+            <div style="font-size:1.5rem;font-weight:900;">48ч</div>
+            <div style="font-family:Lato,sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;">после обжарки</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ КАТАЛОГ (КАРТОЧКИ) ═══════════════ -->
+  <section class="section section--mid" id="catalog" aria-labelledby="catalog-title">
+    <div class="section__inner">
+      <header class="section__header">
+        <span class="section__eyebrow">Наш выбор</span>
+        <h2 class="section__title" id="catalog-title">Популярные сорта</h2>
+        <p class="section__subtitle">Каждый лот вручную отобран нашим Q-грейдером</p>
+      </header>
+
+      <div class="products-grid">
+        <!-- Карточка 1 -->
+        <article class="card card--featured">
+          <div class="card__image">
+            <svg viewBox="0 0 300 225" width="300" height="225" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="300" height="225" fill="url(#g1)"/>
+              <defs><linearGradient id="g1" x1="0" y1="0" x2="300" y2="225"><stop stop-color="#1a0500"/><stop offset="1" stop-color="#3b1a00"/></linearGradient></defs>
+              <circle cx="150" cy="112" r="55" fill="#c8853a" opacity="0.15"/>
+              <text x="150" y="100" text-anchor="middle" font-size="48" fill="#c8853a" opacity="0.8">☕</text>
+              <text x="150" y="148" text-anchor="middle" font-family="Lato" font-size="13" font-weight="700" fill="#d4a96a" letter-spacing="2">ETHIOPIA</text>
+            </svg>
+          </div>
+          <div class="card__body">
+            <p class="card__origin">Эфиопия · Yirgacheffe</p>
+            <h3 class="card__title">Floral Garden</h3>
+            <p class="card__desc">Лёгкая и яркая. Жасмин, чай Эрл Грей, персик и длинное сладкое послевкусие.</p>
+            <div class="card__notes">
+              <span class="card__note">Жасмин</span>
+              <span class="card__note">Персик</span>
+              <span class="card__note">Цитрус</span>
+            </div>
+            <div class="card__footer">
+              <span class="card__price">890 ₽<span class="card__price-unit">/ 250 г</span></span>
+              <button class="card__btn" type="button">В корзину</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Карточка 2 -->
+        <article class="card">
+          <div class="card__image">
+            <svg viewBox="0 0 300 225" width="300" height="225" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="300" height="225" fill="url(#g2)"/>
+              <defs><linearGradient id="g2" x1="0" y1="0" x2="300" y2="225"><stop stop-color="#2d1200"/><stop offset="1" stop-color="#1a0a00"/></linearGradient></defs>
+              <circle cx="150" cy="112" r="55" fill="#c8853a" opacity="0.1"/>
+              <text x="150" y="100" text-anchor="middle" font-size="48" fill="#c8853a" opacity="0.8">🫘</text>
+              <text x="150" y="148" text-anchor="middle" font-family="Lato" font-size="13" font-weight="700" fill="#d4a96a" letter-spacing="2">COLOMBIA</text>
+            </svg>
+          </div>
+          <div class="card__body">
+            <p class="card__origin">Колумбия · Huila</p>
+            <h3 class="card__title">Dark Chocolate</h3>
+            <p class="card__desc">Классика спешелти. Горький шоколад, красное яблоко, карамель и ореховая нотка.</p>
+            <div class="card__notes">
+              <span class="card__note">Шоколад</span>
+              <span class="card__note">Карамель</span>
+              <span class="card__note">Яблоко</span>
+            </div>
+            <div class="card__footer">
+              <span class="card__price">750 ₽<span class="card__price-unit">/ 250 г</span></span>
+              <button class="card__btn" type="button">В корзину</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Карточка 3 -->
+        <article class="card">
+          <div class="card__image">
+            <svg viewBox="0 0 300 225" width="300" height="225" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="300" height="225" fill="url(#g3)"/>
+              <defs><linearGradient id="g3" x1="0" y1="0" x2="300" y2="225"><stop stop-color="#1a0a00"/><stop offset="1" stop-color="#2d1200"/></linearGradient></defs>
+              <circle cx="150" cy="112" r="55" fill="#c8853a" opacity="0.12"/>
+              <text x="150" y="100" text-anchor="middle" font-size="48" fill="#c8853a" opacity="0.8">🌿</text>
+              <text x="150" y="148" text-anchor="middle" font-family="Lato" font-size="13" font-weight="700" fill="#d4a96a" letter-spacing="2">KENYA</text>
+            </svg>
+          </div>
+          <div class="card__body">
+            <p class="card__origin">Кения · Kirinyaga</p>
+            <h3 class="card__title">Berry Punch</h3>
+            <p class="card__desc">Взрывная кислотность. Смородина, грейпфрут, малина и томатный сок.</p>
+            <div class="card__notes">
+              <span class="card__note">Смородина</span>
+              <span class="card__note">Малина</span>
+              <span class="card__note">Томат</span>
+            </div>
+            <div class="card__footer">
+              <span class="card__price">980 ₽<span class="card__price-unit">/ 250 г</span></span>
+              <button class="card__btn" type="button">В корзину</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Карточка 4 -->
+        <article class="card">
+          <div class="card__image">
+            <svg viewBox="0 0 300 225" width="300" height="225" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="300" height="225" fill="url(#g4)"/>
+              <defs><linearGradient id="g4" x1="0" y1="0" x2="300" y2="225"><stop stop-color="#3b1a00"/><stop offset="1" stop-color="#2d1200"/></linearGradient></defs>
+              <circle cx="150" cy="112" r="55" fill="#c8853a" opacity="0.1"/>
+              <text x="150" y="100" text-anchor="middle" font-size="48" fill="#c8853a" opacity="0.8">🏔️</text>
+              <text x="150" y="148" text-anchor="middle" font-family="Lato" font-size="13" font-weight="700" fill="#d4a96a" letter-spacing="2">GUATEMALA</text>
+            </svg>
+          </div>
+          <div class="card__body">
+            <p class="card__origin">Гватемала · Antigua</p>
+            <h3 class="card__title">Volcanic Soil</h3>
+            <p class="card__desc">Вулканическая почва даёт сложность. Тёмная слива, пряности и сухофрукты.</p>
+            <div class="card__notes">
+              <span class="card__note">Слива</span>
+              <span class="card__note">Пряности</span>
+              <span class="card__note">Изюм</span>
+            </div>
+            <div class="card__footer">
+              <span class="card__price">820 ₽<span class="card__price-unit">/ 250 г</span></span>
+              <button class="card__btn" type="button">В корзину</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Карточка 5 -->
+        <article class="card card--featured">
+          <div class="card__image">
+            <svg viewBox="0 0 300 225" width="300" height="225" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="300" height="225" fill="url(#g5)"/>
+              <defs><linearGradient id="g5" x1="0" y1="0" x2="300" y2="225"><stop stop-color="#1a0500"/><stop offset="1" stop-color="#3b1a00"/></linearGradient></defs>
+              <circle cx="150" cy="112" r="55" fill="#c8853a" opacity="0.18"/>
+              <text x="150" y="100" text-anchor="middle" font-size="48" fill="#c8853a" opacity="0.9">✨</text>
+              <text x="150" y="148" text-anchor="middle" font-family="Lato" font-size="13" font-weight="700" fill="#d4a96a" letter-spacing="2">PANAMA</text>
+            </svg>
+          </div>
+          <div class="card__body">
+            <p class="card__origin">Панама · Geisha</p>
+            <h3 class="card__title">Geisha Reserve</h3>
+            <p class="card__desc">Легенда мира кофе. Бергамот, белый чай, жасмин и мёд. Очень ограниченный лот.</p>
+            <div class="card__notes">
+              <span class="card__note">Бергамот</span>
+              <span class="card__note">Белый чай</span>
+              <span class="card__note">Мёд</span>
+            </div>
+            <div class="card__footer">
+              <span class="card__price">1 450 ₽<span class="card__price-unit">/ 150 г</span></span>
+              <button class="card__btn" type="button">В корзину</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Карточка 6 -->
+        <article class="card">
+          <div class="card__image">
+            <svg viewBox="0 0 300 225" width="300" height="225" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="300" height="225" fill="url(#g6)"/>
+              <defs><linearGradient id="g6" x1="0" y1="0" x2="300" y2="225"><stop stop-color="#2d1200"/><stop offset="1" stop-color="#1a0a00"/></linearGradient></defs>
+              <circle cx="150" cy="112" r="55" fill="#c8853a" opacity="0.1"/>
+              <text x="150" y="100" text-anchor="middle" font-size="48" fill="#c8853a" opacity="0.8">🎋</text>
+              <text x="150" y="148" text-anchor="middle" font-family="Lato" font-size="13" font-weight="700" fill="#d4a96a" letter-spacing="2">INDONESIA</text>
+            </svg>
+          </div>
+          <div class="card__body">
+            <p class="card__origin">Индонезия · Sumatra</p>
+            <h3 class="card__title">Forest Spirit</h3>
+            <p class="card__desc">Полнотелый и землистый. Тёмное какао, кедр, табак и долгое послевкусие.</p>
+            <div class="card__notes">
+              <span class="card__note">Какао</span>
+              <span class="card__note">Кедр</span>
+              <span class="card__note">Земля</span>
+            </div>
+            <div class="card__footer">
+              <span class="card__price">690 ₽<span class="card__price-unit">/ 250 г</span></span>
+              <button class="card__btn" type="button">В корзину</button>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div style="text-align:center;margin-top:3rem;">
+        <a href="#" class="btn btn--outline" style="color:#1a0a00;border-color:rgba(26,10,0,0.2);">Смотреть весь каталог</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ ПРЕИМУЩЕСТВА ═══════════════ -->
+  <section class="section section--dark" aria-labelledby="features-title">
+    <div class="section__inner">
+      <header class="section__header">
+        <span class="section__eyebrow">Почему мы</span>
+        <h2 class="section__title section__title--light" id="features-title">Наши обещания</h2>
+        <p class="section__subtitle section__subtitle--light">Мы работаем иначе, и это чувствуется в каждой чашке</p>
+      </header>
+
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature__icon">🌱</div>
+          <h3 class="feature__title">Прямая торговля</h3>
+          <p class="feature__text">Работаем напрямую с фермерами. Никаких посредников — честная цена и лучшее качество.</p>
+        </div>
+        <div class="feature">
+          <div class="feature__icon">🔥</div>
+          <h3 class="feature__title">Малые партии</h3>
+          <p class="feature__text">Обжариваем по 15–25 кг за раз. Каждый лот получает максимум внимания.</p>
+        </div>
+        <div class="feature">
+          <div class="feature__icon">🚀</div>
+          <h3 class="feature__title">48 часов до вас</h3>
+          <p class="feature__text">Отправляем в день обжарки. Вы получаете кофе на пике аромата.</p>
+        </div>
+        <div class="feature">
+          <div class="feature__icon">📦</div>
+          <h3 class="feature__title">Подписка</h3>
+          <p class="feature__text">Настройте свой лот, периодичность и степень обжарки. Мы доставим сами.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ ОТЗЫВЫ ═══════════════ -->
+  <section class="section section--warm" aria-labelledby="reviews-title">
+    <div class="section__inner">
+      <header class="section__header">
+        <span class="section__eyebrow">Отзывы</span>
+        <h2 class="section__title" id="reviews-title">Нас любят за вкус</h2>
+      </header>
+
+      <div class="testimonials-grid">
+        <div class="testimonial">
+          <p class="testimonial__text">Пью кофе больше десяти лет, но Floral Garden из Эфиопии — это что-то невероятное. Жасмин и персик — без каких-либо добавок. Только зерно.</p>
+          <div class="testimonial__author">
+            <div class="testimonial__avatar">АМ</div>
+            <div>
+              <div class="testimonial__name">Анна Михайлова</div>
+              <div class="testimonial__role">Подписчик, 2 года</div>
+              <div class="testimonial__stars">★★★★★</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial">
+          <p class="testimonial__text">Заказываю каждые две недели. Скорость доставки впечатляет — кофе всегда свежий. Kolumbia Dark Chocolate стал моим утренним ритуалом.</p>
+          <div class="testimonial__author">
+            <div class="testimonial__avatar">ДК</div>
+            <div>
+              <div class="testimonial__name">Дмитрий Козлов</div>
+              <div class="testimonial__role">Подписчик, 8 месяцев</div>
+              <div class="testimonial__stars">★★★★★</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial">
+          <p class="testimonial__text">Открыл для себя кенийский кофе именно здесь. Berry Punch — это как будто пьёшь свежую смородину. Невероятная фруктовость.</p>
+          <div class="testimonial__author">
+            <div class="testimonial__avatar">ОС</div>
+            <div>
+              <div class="testimonial__name">Ольга Соколова</div>
+              <div class="testimonial__role">Новый покупатель</div>
+              <div class="testimonial__stars">★★★★★</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ CTA ═══════════════ -->
+  <section class="cta" aria-label="Призыв к действию">
+    <div class="cta__inner">
+      <h2 class="cta__title">Начните с <em>одной чашки</em></h2>
+      <p class="cta__text">Подпишитесь на наш стартовый набор — 3 сорта по 100 г с дегустационной картой и инструкцией по завариванию.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="#catalog" class="btn btn--primary">Попробовать набор — 990 ₽</a>
+        <a href="contacts.html" class="btn btn--outline">Задать вопрос</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand-title">Brew & Soul</div>
+          <p class="footer__brand-text">Обжарочня спешелти-кофе в Москве. С 2025 года привозим лучшие зёрна с ферм напрямую к вашей чашке.</p>
+          <div class="footer__socials">
+            <a href="#" class="footer__social" aria-label="Telegram"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 1 0 24 12 12 12 0 0 0 11.944 0zm5.054 8.198-1.99 9.375c-.147.66-.537.82-1.086.51l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.332-.373-.12L7.869 13.9l-2.93-.916c-.637-.2-.65-.637.132-.943l11.432-4.407c.53-.194.995.12.82.944l.221-.38z"/></svg></a>
+            <a href="#" class="footer__social" aria-label="ВКонтакте"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.692 17.123h-1.744c-.66 0-.862-.523-2.045-1.72-1.03-1-1.49-.9-1.74-.9-.356 0-.458.1-.458.6v1.57c0 .427-.136.683-1.254.683-1.846 0-3.896-1.12-5.337-3.2C4.624 10.857 4 8.408 4 7.938c0-.252.1-.486.6-.486h1.744c.447 0 .616.2.786.67 1.09 2.8 2.615 4.4 3.3 4.4.253 0 .367-.1.367-.7V9.686c-.073-1.27-.745-1.37-.745-1.82 0-.218.18-.438.458-.438h2.741c.375 0 .508.2.508.64v3.45c0 .37.162.5.26.5.252 0 .46-.13.92-.59 1.42-1.59 2.435-4.04 2.435-4.04.134-.27.375-.52.82-.52h1.744c.526 0 .64.27.526.64-.22 1.02-2.37 4.056-2.37 4.056-.195.32-.266.46 0 .82.195.27.833.83 1.26 1.33.78.9 1.38 1.65 1.54 2.17.174.52-.09.78-.594.78z"/></svg></a>
+            <a href="#" class="footer__social" aria-label="MAX"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 13.5h-1.6l-1.9-3.1-1.9 3.1H8.5l2.7-4.1-2.5-3.9h1.6l1.7 2.8 1.7-2.8H15l-2.5 3.9 2.5 3.9-.5.1z"/></svg></a>
+            <a href="#" class="footer__social" aria-label="YouTube"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5a3 3 0 00-2.1 2.1A31 31 0 000 12a31 31 0 00.5 5.8 3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1A31 31 0 0024 12a31 31 0 00-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg></a>
+          </div>
+        </div>
+        <div>
+          <div class="footer__col-title">Магазин</div>
+          <ul class="footer__links">
+            <li><a href="#catalog" class="footer__link">Весь каталог</a></li>
+            <li><a href="#" class="footer__link">Подписка</a></li>
+            <li><a href="#" class="footer__link">Наборы</a></li>
+            <li><a href="#" class="footer__link">Аксессуары</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-title">Компания</div>
+          <ul class="footer__links">
+            <li><a href="index.html#about" class="footer__link">О нас</a></li>
+            <li><a href="faq.html" class="footer__link">FAQ</a></li>
+            <li><a href="#" class="footer__link">Блог</a></li>
+            <li><a href="contacts.html" class="footer__link">Контакты</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-title">Контакты</div>
+          <ul class="footer__links">
+            <li><a href="/cdn-cgi/l/email-protection#7018151c1c1f3012021507111e14031f051c5e0205" class="footer__link"><span class="__cf_email__" data-cfemail="99f1fcf5f5f6d9fbebfceef8f7fdeaf6ecf5b7ebec">[email&#160;protected]</span></a></li>
+            <li><a href="tel:+74996008080" class="footer__link">+7 (499) 600-80-80</a></li>
+            <li><span class="footer__link">Москва,<br>просп. Вернадского, 78с3</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copy">© 2026 Brew & Soul. Все права защищены.</p>
+        <p class="footer__copy">Политика конфиденциальности · Условия доставки</p>
+      </div>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // Header scroll shadow
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('header--scrolled', window.scrollY > 20);
+    });
+
+    // Burger menu (мобильный)
+    const burger = document.getElementById('burgerBtn');
+    const nav    = document.querySelector('.header__nav');
+    burger.addEventListener('click', () => {
+      const open = nav.style.display === 'flex';
+      nav.style.display = open ? 'none' : 'flex';
+      nav.style.flexDirection = 'column';
+      nav.style.position = 'absolute';
+      nav.style.top = '64px';
+      nav.style.left = '0';
+      nav.style.right = '0';
+      nav.style.background = 'rgba(26,10,0,0.98)';
+      nav.style.padding = '1rem 1.5rem';
+      burger.setAttribute('aria-expanded', String(!open));
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e =

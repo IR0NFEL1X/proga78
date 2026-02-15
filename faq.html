@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ — Brew & Soul</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { espresso:'#1a0a00',roast:'#3b1a00',crema:'#c8853a',latte:'#d4a96a',foam:'#f5efe6',steam:'#fdf8f2' },
+          fontFamily: { display:['"Playfair Display"','serif'], body:['Lato','sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* ═══ BEM: header ═══ */
+    .header{position:fixed;top:0;left:0;right:0;z-index:50;background-color:rgba(26,10,0,0.95);backdrop-filter:blur(8px);transition:box-shadow 0.3s;}
+    .header--scrolled{box-shadow:0 2px 20px rgba(0,0,0,0.4);}
+    .header__inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:64px;}
+    .header__logo{display:flex;align-items:center;gap:0.5rem;text-decoration:none;}
+    .header__logo-mark{width:36px;height:36px;background:#c8853a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:900;color:#1a0a00;font-size:1rem;}
+    .header__logo-text{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:#f5efe6;letter-spacing:0.03em;}
+    .header__nav{display:flex;gap:0;}
+    .header__nav-link{font-family:Lato,sans-serif;font-size:0.875rem;font-weight:400;color:#d4a96a;text-decoration:none;padding:0.5rem 1rem;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.2s;}
+    .header__nav-link:hover,.header__nav-link--active{color:#f5efe6;}
+    .header__cart{display:flex;align-items:center;gap:0.5rem;font-family:Lato,sans-serif;font-size:0.875rem;font-weight:700;color:#1a0a00;background:#c8853a;border:none;cursor:pointer;padding:0.5rem 1.25rem;border-radius:2px;letter-spacing:0.05em;text-transform:uppercase;transition:background 0.2s;}
+    .header__cart:hover{background:#d4a96a;}
+    .header__burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}
+    .header__burger-line{width:24px;height:2px;background:#d4a96a;border-radius:2px;}
+
+    /* ═══ BEM: page-hero ═══ */
+    .page-hero{background:#1a0a00;padding:7rem 0 4rem;position:relative;overflow:hidden;}
+    .page-hero__bg{position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(59,26,0,0.5) 0%,transparent 60%);}
+    .page-hero__inner{position:relative;max-width:1200px;margin:0 auto;padding:0 1.5rem;}
+    .page-hero__eyebrow{font-family:Lato,sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#c8853a;display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;}
+    .page-hero__eyebrow::before{content:'';display:block;width:32px;height:1px;background:#c8853a;}
+    .page-hero__title{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(2rem,4vw,3.5rem);color:#f5efe6;line-height:1.1;}
+    .page-hero__title em{color:#c8853a;font-style:italic;}
+    .page-hero__sub{font-family:Lato,sans-serif;font-size:1rem;font-weight:300;color:#d4a96a;margin-top:0.75rem;}
+
+    /* ═══ BEM: section ═══ */
+    .section{padding:5rem 0;}
+    .section--warm{background:#f5efe6;}
+    .section--mid{background:#fdf8f2;}
+    .section--dark{background:#1a0a00;}
+    .section__inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;}
+
+    /* ═══ BEM: faq ═══ */
+    .faq{max-width:800px;margin:0 auto;}
+    .faq__category{margin-bottom:3rem;}
+    .faq__category-title{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:#1a0a00;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.75rem;padding-bottom:0.75rem;border-bottom:1px solid #ede0d0;}
+    .faq__category-icon{font-size:1.25rem;}
+
+    /* ═══ BEM: accordion ═══ */
+    .accordion{display:flex;flex-direction:column;gap:0.5rem;}
+    .accordion__item{background:white;border:1px solid #ede0d0;border-radius:4px;overflow:hidden;transition:border-color 0.2s;}
+    .accordion__item--open{border-color:#c8853a;}
+    .accordion__trigger{width:100%;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;background:none;border:none;cursor:pointer;text-align:left;gap:1rem;transition:background 0.2s;}
+    .accordion__trigger:hover{background:#fdf8f2;}
+    .accordion__trigger:focus-visible{outline:2px solid #c8853a;outline-offset:-2px;}
+    .accordion__question{font-family:Lato,sans-serif;font-weight:700;font-size:0.95rem;color:#1a0a00;line-height:1.4;}
+    .accordion__icon{flex-shrink:0;width:24px;height:24px;border:1px solid #ede0d0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c8853a;font-size:0.75rem;transition:transform 0.3s,background 0.2s,border-color 0.2s;}
+    .accordion__item--open .accordion__icon{transform:rotate(45deg);background:#c8853a;border-color:#c8853a;color:#1a0a00;}
+    .accordion__body{max-height:0;overflow:hidden;transition:max-height 0.35s cubic-bezier(0.4,0,0.2,1),padding 0.35s;}
+    .accordion__item--open .accordion__body{max-height:400px;}
+    .accordion__answer{font-family:Lato,sans-serif;font-size:0.9rem;font-weight:300;color:#6b5540;line-height:1.8;padding:0 1.5rem 1.5rem;}
+    .accordion__answer a{color:#c8853a;text-decoration:underline;}
+    .accordion__answer strong{font-weight:700;color:#1a0a00;}
+
+    /* ═══ BEM: search-box ═══ */
+    .search-box{max-width:500px;margin:0 auto 3rem;position:relative;}
+    .search-box__input{width:100%;font-family:Lato,sans-serif;font-size:0.95rem;font-weight:300;color:#1a0a00;background:white;border:1px solid #ede0d0;border-radius:2px;padding:0.9rem 1rem 0.9rem 3rem;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+    .search-box__input:focus{border-color:#c8853a;box-shadow:0 0 0 3px rgba(200,133,58,0.1);}
+    .search-box__icon{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:#c8853a;pointer-events:none;font-size:1rem;}
+    .search-box__clear{position:absolute;right:1rem;top:50%;transform:translateY(-50%);background:none;border:none;color:#6b5540;cursor:pointer;font-size:0.75rem;display:none;padding:4px;}
+
+    /* ═══ BEM: faq-cta ═══ */
+    .faq-cta{background:white;border:1px solid #ede0d0;border-radius:4px;padding:2.5rem;text-align:center;margin-top:3rem;}
+    .faq-cta__title{font-family:'Playfair Display',serif;font-weight:700;font-size:1.35rem;color:#1a0a00;margin-bottom:0.75rem;}
+    .faq-cta__text{font-family:Lato,sans-serif;font-size:0.9rem;font-weight:300;color:#6b5540;margin-bottom:1.5rem;line-height:1.7;}
+    .faq-cta__btn{font-family:Lato,sans-serif;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;font-size:0.8rem;background:#1a0a00;color:#f5efe6;padding:0.85rem 2rem;border-radius:2px;text-decoration:none;display:inline-block;transition:background 0.2s;}
+    .faq-cta__btn:hover{background:#c8853a;color:#1a0a00;}
+
+    /* ═══ BEM: footer ═══ */
+    .footer{background:#0d0500;padding:4rem 0 2rem;}
+    .footer__inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;}
+    .footer__grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,0.06);}
+    .footer__brand-title{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:#f5efe6;margin-bottom:0.75rem;}
+    .footer__brand-text{font-family:Lato,sans-serif;font-size:0.875rem;font-weight:300;color:#6b5540;line-height:1.7;margin-bottom:1.5rem;max-width:260px;}
+    .footer__socials{display:flex;gap:0.75rem;}
+    .footer__social{width:36px;height:36px;border:1px solid rgba(200,133,58,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c8853a;font-size:0.75rem;text-decoration:none;transition:all 0.2s;}
+    .footer__social:hover{background:#c8853a;color:#1a0a00;border-color:#c8853a;}
+    .footer__col-title{font-family:Lato,sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#c8853a;margin-bottom:1.25rem;}
+    .footer__links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.6rem;}
+    .footer__link{font-family:Lato,sans-serif;font-size:0.875rem;font-weight:300;color:#6b5540;text-decoration:none;transition:color 0.2s;}
+    .footer__link:hover{color:#d4a96a;}
+    .footer__bottom{display:flex;align-items:center;justify-content:space-between;padding-top:2rem;flex-wrap:wrap;gap:1rem;}
+    .footer__copy{font-family:Lato,sans-serif;font-size:0.75rem;font-weight:300;color:#4a3020;letter-spacing:0.05em;}
+
+    /* No-results */
+    .no-results{text-align:center;padding:2rem;display:none;}
+    .no-results__icon{font-size:2rem;display:block;margin-bottom:0.5rem;}
+    .no-results__text{font-family:Lato,sans-serif;font-size:0.9rem;color:#6b5540;}
+
+    @media(max-width:768px){
+      .footer__grid{grid-template-columns:1fr 1fr;gap:2rem;}
+      .header__nav{display:none;}
+      .header__burger{display:flex;}
+      .header__cart span{display:none;}
+    }
+    @media(max-width:480px){.footer__grid{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body style="background:#fdf8f2;">
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo" aria-label="Brew & Soul — на главную">
+        <div class="header__logo-mark">B</div>
+        <span class="header__logo-text">Brew & Soul</span>
+      </a>
+      <nav class="header__nav" aria-label="Основная навигация">
+        <a href="index.html"    class="header__nav-link">Главная</a>
+        <a href="contacts.html" class="header__nav-link">Контакты</a>
+        <a href="faq.html"      class="header__nav-link header__nav-link--active">FAQ</a>
+      </nav>
+      <button class="header__cart" aria-label="Корзина">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span>Корзина</span>
+      </button>
+      <button class="header__burger" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false">
+        <span class="header__burger-line"></span>
+        <span class="header__burger-line"></span>
+        <span class="header__burger-line"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══════════════ PAGE HERO ═══════════════ -->
+  <section class="page-hero" aria-label="Заголовок страницы">
+    <div class="page-hero__bg"></div>
+    <div class="page-hero__inner">
+      <p class="page-hero__eyebrow">Ответы на вопросы</p>
+      <h1 class="page-hero__title">Часто <em>задаваемые</em><br>вопросы</h1>
+      <p class="page-hero__sub">Всё, что вы хотели знать о нашем кофе и сервисе</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FAQ CONTENT ═══════════════ -->
+  <section class="section section--warm" aria-label="FAQ">
+    <div class="section__inner">
+
+      <!-- Поиск по FAQ -->
+      <div class="search-box">
+        <span class="search-box__icon" aria-hidden="true">🔍</span>
+        <input
+          class="search-box__input"
+          type="search"
+          id="faqSearch"
+          placeholder="Найти вопрос..."
+          aria-label="Поиск по FAQ"
+          autocomplete="off"
+        />
+        <button class="search-box__clear" id="searchClear" aria-label="Очистить поиск">✕</button>
+      </div>
+
+      <div class="faq" id="faqContainer" role="region" aria-label="Список вопросов и ответов">
+
+        <!-- Категория: Заказы и оплата -->
+        <div class="faq__category" data-category="orders">
+          <h2 class="faq__category-title">
+            <span class="faq__category-icon" aria-hidden="true">🛒</span>
+            Заказы и оплата
+          </h2>
+          <div class="accordion" role="list">
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" aria-controls="faq-1-body">
+                <span class="accordion__question">Как сделать заказ на сайте?</span>
+                <span class="accordion__icon" aria-hidden="true">+</span>
+              </button>
+              <div class="accordion__body" id="faq-1-body" role="region">
+                <p class="accordion__answer">Выберите понравившийся сорт кофе в каталоге, нажмите «В корзину» и перейдите к оформлению. Вам потребуется указать адрес доставки и выбрать удобный способ оплаты. Заказ подтверждается автоматически — вы получите письмо на email.</p>
+              </div>
+            </div>
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" aria-controls="faq-2-body">
+                <span class="accordion__question">Какие способы оплаты доступны?</span>
+                <span class="accordion__icon" aria-hidden="true">+</span>
+              </button>
+              <div class="accordion__body" id="faq-2-body" role="region">
+                <p class="accordion__answer">Мы принимаем оплату картой Visa/MasterCard/Мир, через СБП (Систему быстрых платежей), а также через ЮMoney и SberPay. Все платежи защищены SSL-шифрованием. Оплата наличными при получении доступна для Москвы.</p>
+              </div>
+            </div>
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" aria-controls="faq-3-body">
+                <span class="accordion__question">Можно ли изменить или отменить заказ?</span>
+                <span class="accordion__icon" aria-hidden="true">+</span>
+              </button>
+              <div class="accordion__body" id="faq-3-body" role="region">
+                <p class="accordion__answer">Изменить или отменить заказ можно в течение <strong>2 часов после оформления</strong>, пока кофе не отправлен в обжарку. Напишите нам на <a href="/cdn-cgi/l/email-protection#670f020b0b0827051502100609031408120b491512"><span class="__cf_email__" data-cfemail="b7dfd2dbdbd8f7d5c5d2c0d6d9d3c4d8c2db99c5c2">[email&#160;protected]</span></a> или позвоните по телефону. После обжарки отмена заказа невозможна, так как кофе обжаривается специально для вас.</p>
+              </div>
+            </div>
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" aria-controls="faq-4-body">
+                <span class="accordion__question">Есть ли минимальная сумма заказа?</span>
+                <span class="accordion__icon" aria-hidden="true">+</span>
+              </button>
+              <div class="accordion__body" id="faq-4-body" role="region">
+                <p class="accordion__answer">Минимальная сумма заказа для бесплатной доставки составляет <strong>1 500 рублей</strong>. При заказе от 990 рублей доставка обходится в 250 рублей. Также доступна самовывоз из нашей обжарочни на Вернадского — без минимальной суммы.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Категория: Доставка -->
+        <div class="faq__category" data-category="delivery">
+          <h2 class="faq__category-title">
+            <span class="faq__category-icon" aria-hidden="true">🚚</span>
+            Доставка
+          </h2>
+          <div class="accordion" role="list">
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" aria-controls="faq-5-body">
+                <span class="accordion__question">Как быстро я получу кофе после заказа?</span>
+                <span class="accordion__icon" aria-hidden="true">+</span>
+              </button>
+              <div class="accordion__body" id="faq-5-body" role="region">
+                <p class="accordion__answer">Кофе обжаривается и отправляется в течение <strong>48 часов</strong> после оформления заказа. По Москве доставка занимает 1–2 рабочих дня. В другие регионы России — 3–7 дней в зависимости от удалённости. Вы получите трек-номер отслеживания на email.</p>
+              </div>
+            </div>
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" aria-controls="faq-6-body">
+                <span class="accordion__question">В какие города вы доставляете?</span>
+                <span class="accordion__icon" aria-hidden="true">+</span>
+              </button>
+              <div class="accordion__body" id="faq-6-body" role="region">
+                <p class="accordion__answer">Мы доставляем по всей России через Почту России и СДЭК. Для жителей Москвы доступна курьерская доставка до двери. Международная доставка пока не осуществляется, но мы работаем над этим.</p>
+              </div>
+            </div>
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" aria-controls="faq-7-body">
+                <span class="accordion__question">Как упаковывается кофе для доставки?</span>
+                <span class="accordion__icon" aria-hidden="true">+</span>
+              </button>
+              <div class="accordion__body" id="faq-7-body" role="region">
+                <p class="accordion__answer">Кофе запаивается в крафтовые пакеты с клапаном дегазации — это специальный клапан, который выпускает CO₂ без доступа кислорода. Это сохраняет свежесть до 3 месяцев в нераспечатанном виде. После вскрытия рекомендуем хранить в герметичном контейнере и использовать в течение 2–3 недель.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Категория: Кофе и обжарка -->
+        <div class="faq__category" data-category="coffee">
+          <h2 class="faq__category-title">
+            <span class="faq__category-icon" aria-hidden="true">☕</span>
+            Кофе и обжарка
+          </h2>
+          <div class="accordion" role="list">
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" aria-controls="faq-8-body">
+                <span class="accordion__question">Что такое спешелти-кофе?</span>
+                <span class="accordion__icon" aria-hidden="true">+</span>
+              </button>
+              <div class="accordion__body" id="faq-8-body" role="region">
+                <p class="accordion__answer">Спешелти — это кофе, получивший оценку <strong>80+ баллов из 100</strong> по системе SCA (Specialty Coffee Association). Такой кофе выращивается на конкретных фермах в оптимальных климатических условиях, тщательно собирается вручную и обрабатывается с соблюдением строгих стандартов. Мы работаем только со спешелти — это наш принцип.</p>
+              </div>
+            </div>
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" aria-controls="faq-9-body">
+                <span class="accordion__question">Какую степень обжарки вы используете?</span>
+                <span class="accordion__icon" aria-hidden="true">+</span>
+              </button>
+              <div class="accordion__body" id="faq-9-body" role="region">
+                <p class="accordion__answer">Мы используем преимущественно <strong>светлую и среднюю обжарку</strong>, которая раскрывает натуральные вкусовые ноты зерна — фруктовость, кислотность, флоральность. Тёмная обжарка скрывает происхождение и терруар кофе, поэтому мы от неё отказались. Для каждого сорта подбирается индивидуальный профиль обжарки.</p>
+              </div>
+            </div>
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" aria-controls="faq-10-body">
+                <span class="accordion__question">Как правильно хранить кофе дома?</span>
+                <span class="accordion__icon" aria-hidden="true">+</span>
+              </button>
+              <div class="accordion__body" id="faq-10-body" role="region">
+                <p class="accordion__answer">Главные враги кофе — свет, кислород, влага и резкие запахи. После вскрытия пакета храните кофе в тёмном, прохладном месте в герметичном непрозрачном контейнере. <strong>Не рекомендуем хранить в холодильнике или морозилке</strong> — при перепадах температуры образуется конденсат. Оптимально — использовать молотый кофе в течение 2 недель, зерно — в течение месяца после вскрытия.</p>
+              </div>
+            </div>
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" aria-controls="faq-11-body">
+                <span class="accordion__question">Для какого способа заваривания подходит ваш кофе?</span>
+                <span class="accordion__icon" aria-hidden="true">+</span>
+              </button>
+              <div class="accordion__body" id="faq-11-body" role="region">
+                <p class="accordion__answer">Наш кофе подходит для любого метода: эспрессо, фильтр (кемекс, пуровер, аэропресс, фильтр-кофемашина), турка, французский пресс, мока. На карточке каждого товара мы указываем рекомендуемые методы заваривания. При заказе вы можете выбрать степень помола — целое зерно, для фильтра или для эспрессо.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Категория: Подписка -->
+        <div class="faq__category" data-category="subscription">
+          <h2 class="faq__category-title">
+            <span class="faq__category-icon" aria-hidden="true">📦</span>
+            Подписка
+          </h2>
+          <div class="accordion" role="list">
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" aria-controls="faq-12-body">
+                <span class="accordion__question">Как работает подписка на кофе?</span>
+                <span class="accordion__icon" aria-hidden="true">+</span>
+              </button>
+              <div class="accordion__body" id="faq-12-body" role="region">
+                <p class="accordion__answer">Подписка позволяет получать свежеобжаренный кофе с нужной периодичностью: каждые 2, 3 или 4 недели. Вы выбираете сорт, объём (250 г или 500 г) и степень помола. Оплата списывается автоматически за день до отправки. Подписчики получают <strong>скидку 10%</strong> на каждый заказ и первыми узнают о новых лотах.</p>
+              </div>
+            </div>
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" aria-controls="faq-13-body">
+                <span class="accordion__question">Можно ли приостановить или отменить подписку?</span>
+                <span class="accordion__icon" aria-hidden="true">+</span>
+              </button>
+              <div class="accordion__body" id="faq-13-body" role="region">
+                <p class="accordion__answer">Да, в любой момент. В личном кабинете вы можете приостановить подписку на любой срок, изменить адрес доставки, сменить сорт кофе или полностью отменить подписку. Никаких штрафов и скрытых условий — мы против принудительных привязок.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Блок "не нашли ответ" -->
+        <div class="no-results" id="noResults" role="alert">
+          <span class="no-results__icon">🤔</span>
+          <p class="no-results__text">По вашему запросу ничего не найдено</p>
+        </div>
+
+        <!-- CTA -->
+        <div class="faq-cta">
+          <h3 class="faq-cta__title">Не нашли ответ на свой вопрос?</h3>
+          <p class="faq-cta__text">Мы готовы помочь! Напишите нам — ответим в течение нескольких часов.</p>
+          <a href="contacts.html" class="faq-cta__btn">Написать нам</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand-title">Brew & Soul</div>
+          <p class="footer__brand-text">Обжарочня спешелти-кофе в Москве. С 2025 года привозим лучшие зёрна с ферм напрямую к вашей чашке.</p>
+          <div class="footer__socials">
+            <a href="#" class="footer__social" aria-label="Telegram"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 1 0 24 12 12 12 0 0 0 11.944 0zm5.054 8.198-1.99 9.375c-.147.66-.537.82-1.086.51l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.332-.373-.12L7.869 13.9l-2.93-.916c-.637-.2-.65-.637.132-.943l11.432-4.407c.53-.194.995.12.82.944l.221-.38z"/></svg></a>
+            <a href="#" class="footer__social" aria-label="ВКонтакте"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.692 17.123h-1.744c-.66 0-.862-.523-2.045-1.72-1.03-1-1.49-.9-1.74-.9-.356 0-.458.1-.458.6v1.57c0 .427-.136.683-1.254.683-1.846 0-3.896-1.12-5.337-3.2C4.624 10.857 4 8.408 4 7.938c0-.252.1-.486.6-.486h1.744c.447 0 .616.2.786.67 1.09 2.8 2.615 4.4 3.3 4.4.253 0 .367-.1.367-.7V9.686c-.073-1.27-.745-1.37-.745-1.82 0-.218.18-.438.458-.438h2.741c.375 0 .508.2.508.64v3.45c0 .37.162.5.26.5.252 0 .46-.13.92-.59 1.42-1.59 2.435-4.04 2.435-4.04.134-.27.375-.52.82-.52h1.744c.526 0 .64.27.526.64-.22 1.02-2.37 4.056-2.37 4.056-.195.32-.266.46 0 .82.195.27.833.83 1.26 1.33.78.9 1.38 1.65 1.54 2.17.174.52-.09.78-.594.78z"/></svg></a>
+            <a href="#" class="footer__social" aria-label="MAX"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 13.5h-1.6l-1.9-3.1-1.9 3.1H8.5l2.7-4.1-2.5-3.9h1.6l1.7 2.8 1.7-2.8H15l-2.5 3.9 2.5 3.9-.5.1z"/></svg></a>
+            <a href="#" class="footer__social" aria-label="YouTube"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5a3 3 0 00-2.1 2.1A31 31 0 000 12a31 31 0 00.5 5.8 3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1A31 31 0 0024 12a31 31 0 00-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg></a>
+          </div>
+        </div>
+        <div>
+          <div class="footer__col-title">Магазин</div>
+          <ul class="footer__links">
+            <li><a href="index.html#catalog" class="footer__link">Весь каталог</a></li>
+            <li><a href="#" class="footer__link">Подписка</a></li>
+            <li><a href="#" class="footer__link">Наборы</a></li>
+            <li><a href="#" class="footer__link">Аксессуары</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-title">Компания</div>
+          <ul class="footer__links">
+            <li><a href="index.html#about" class="footer__link">О нас</a></li>
+            <li><a href="faq.html" class="footer__link">FAQ</a></li>
+            <li><a href="#" class="footer__link">Блог</a></li>
+            <li><a href="contacts.html" class="footer__link">Контакты</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-title">Контакты</div>
+          <ul class="footer__links">
+            <li><a href="/cdn-cgi/l/email-protection#fd9598919192bd9f8f988a9c93998e928891d38f88" class="footer__link"><span class="__cf_email__" data-cfemail="abc3cec7c7c4ebc9d9cedccac5cfd8c4dec785d9de">[email&#160;protected]</span></a></li>
+            <li><a href="tel:+74996008080" class="footer__link">+7 (499) 600-80-80</a></li>
+            <li><span class="footer__link">Москва,<br>просп. Вернадского, 78с3</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copy">© 2026 Brew & Soul. Все права защищены.</p>
+        <p class="footer__copy">Политика конфиденциальности · Условия доставки</p>
+      </div>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // ── Header scroll ──
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('header--scrolled', window.scrollY > 20);
+    });
+
+    // ── Burger ──
+    const burger = document.getElementById('burgerBtn');
+    const nav    = document.querySelector('.header__nav');
+    burger.addEventListener('click', () => {
+      const open = nav.style.display === 'flex';
+      nav.style.display = open ? 'none' : 'flex';
+      nav.style.flexDirection = 'column';
+      nav.style.position = 'absolute';
+      nav.style.top = '64px'; nav.style.left = '0'; nav.style.right = '0';
+      nav.style.background = 'rgba(26,10,0,0.98)';
+      nav.style.padding = '1rem 1.5rem';
+      burger.setAttribute('aria-expanded', String(!open));
+    });
+
+    // ── Аккордеон ──
+    document.querySelectorAll('.accordion__trigger').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item    = btn.closest('.accordion__item');
+        const isOpen  = item.classList.contains('accordion__item--open');
+        // Закрыть все в той же категории
+        btn.closest('.accordion').querySelectorAll('.accordion__item').forEach(i => {
+          i.classList.remove('accordion__item--open');
+          i.querySelector('.accordion__trigger').setAttribute('aria-expanded', 'false');
+        });
+        // Открыть текущий (если не был открыт)
+        if (!isOpen) {
+          item.classList.add('accordion__item--open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      // Клавиатурный доступ
+      btn.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+      });
+    });
+
+    // ── Поиск по FAQ ──
+    const searchInput = document.getElementById('faqSearch');
+    const clearBtn    = document.getElementById('searchClear');
+    const noResults   = document.getElementById('noResults');
+
+    function filterFAQ(query) {
+      const q = query.toLowerCase().trim();
+      let totalVisible = 0;
+
+      document.querySelectorAll('.accordion__item').forEach(item => {
+        const question = item.querySelector('.accordion__question').textContent.toLowerCase();
+        const answer   = item.querySelector('.accordion__answer').textContent.toLowerCase();
+        const match = !q || question.includes(q) || answer.includes(q);
+        item.style.display = match ? '' : 'none';
+        if (match) totalVisible++;
+      });
+
+      // Скрывать категории без видимых вопросов
+      document.querySelectorAll('.faq__category').forEach(cat => {
+        const visible = [...cat.querySelectorAll('.accordion__item')].some(i => i.style.display !== 'none');
+        cat.style.display = visible ? '' : 'none';
+  

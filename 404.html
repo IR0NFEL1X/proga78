@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Страница не найдена · Brew & Soul</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { espresso:'#1a0a00',roast:'#3b1a00',crema:'#c8853a',latte:'#d4a96a',foam:'#f5efe6',steam:'#fdf8f2' },
+          fontFamily: { display:['"Playfair Display"','serif'], body:['Lato','sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* ═══ BEM: header ═══ */
+    .header{position:fixed;top:0;left:0;right:0;z-index:50;background-color:rgba(26,10,0,0.95);backdrop-filter:blur(8px);}
+    .header__inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:64px;}
+    .header__logo{display:flex;align-items:center;gap:0.5rem;text-decoration:none;}
+    .header__logo-mark{width:36px;height:36px;background:#c8853a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:900;color:#1a0a00;font-size:1rem;}
+    .header__logo-text{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:#f5efe6;letter-spacing:0.03em;}
+    .header__nav{display:flex;gap:0;}
+    .header__nav-link{font-family:Lato,sans-serif;font-size:0.875rem;font-weight:400;color:#d4a96a;text-decoration:none;padding:0.5rem 1rem;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.2s;}
+    .header__nav-link:hover{color:#f5efe6;}
+    .header__cart{display:flex;align-items:center;gap:0.5rem;font-family:Lato,sans-serif;font-size:0.875rem;font-weight:700;color:#1a0a00;background:#c8853a;border:none;cursor:pointer;padding:0.5rem 1.25rem;border-radius:2px;letter-spacing:0.05em;text-transform:uppercase;transition:background 0.2s;}
+    .header__cart:hover{background:#d4a96a;}
+    .header__burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}
+    .header__burger-line{width:24px;height:2px;background:#d4a96a;border-radius:2px;}
+
+    /* ═══ BEM: error-page ═══ */
+    .error-page{
+      min-height:100vh; background:#1a0a00;
+      display:flex; align-items:center; justify-content:center;
+      position:relative; overflow:hidden; padding:5rem 1.5rem;
+    }
+    .error-page__bg{
+      position:absolute;inset:0;
+      background:radial-gradient(ellipse at 50% 50%,rgba(59,26,0,0.8) 0%,rgba(26,10,0,1) 70%);
+    }
+    .error-page__particles{position:absolute;inset:0;pointer-events:none;}
+
+    .error-page__content{
+      position:relative; text-align:center; max-width:600px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .error-page__cup{
+      margin:0 auto 2rem;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .error-page__code{
+      font-family:'Playfair Display',serif;font-weight:900;
+      font-size:clamp(6rem,18vw,10rem);line-height:1;
+      color:#f5efe6;
+      letter-spacing:-0.03em;
+      background:linear-gradient(135deg,#f5efe6 0%,#c8853a 50%,#f5efe6 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      margin-bottom:0.25rem;
+    }
+    .error-page__title{
+      font-family:'Playfair Display',serif;font-weight:700;
+      font-size:clamp(1.3rem,3vw,2rem);color:#f5efe6;
+      margin-bottom:1rem;line-height:1.3;
+    }
+    .error-page__title em{color:#c8853a;font-style:italic;}
+    .error-page__text{
+      font-family:Lato,sans-serif;font-size:1rem;font-weight:300;
+      color:#d4a96a;line-height:1.8;margin-bottom:2.5rem;
+    }
+
+    .error-page__actions{
+      display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem;
+    }
+
+    .btn{font-family:Lato,sans-serif;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;font-size:0.8rem;text-decoration:none;padding:0.9rem 2rem;border-radius:2px;border:none;cursor:pointer;transition:all 0.2s;display:inline-block;}
+    .btn--primary{background:#c8853a;color:#1a0a00;}
+    .btn--primary:hover{background:#d4a96a;transform:translateY(-1px);}
+    .btn--outline{background:transparent;color:#f5efe6;border:1px solid rgba(245,239,230,0.3);}
+    .btn--outline:hover{border-color:#c8853a;color:#c8853a;}
+
+    .error-page__nav{
+      display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;
+    }
+    .error-page__nav-link{
+      font-family:Lato,sans-serif;font-size:0.875rem;font-weight:400;
+      color:#6b5540;text-decoration:none;
+      display:flex;align-items:center;gap:0.35rem;
+      transition:color 0.2s;
+    }
+    .error-page__nav-link:hover{color:#c8853a;}
+    .error-page__nav-separator{color:#3b1a00;font-size:0.75rem;}
+
+    /* Анимации */
+    @keyframes fadeUp {
+      from{opacity:0;transform:translateY(20px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+    @keyframes float {
+      0%,100%{transform:translateY(0);}
+      50%{transform:translateY(-10px);}
+    }
+    @keyframes drift {
+      0%{transform:translate(0,0) rotate(0);}
+      33%{transform:translate(15px,-8px) rotate(8deg);}
+      66%{transform:translate(-10px,5px) rotate(-5deg);}
+      100%{transform:translate(0,0) rotate(0);}
+    }
+
+    .particle{
+      position:absolute;width:6px;height:6px;border-radius:50%;
+      background:#c8853a;opacity:0;
+      animation:drift var(--dur,6s) var(--delay,0s) ease-in-out infinite;
+    }
+
+    /* Таймер обратного отсчёта */
+    .error-page__timer{
+      font-family:Lato,sans-serif;font-size:0.8rem;font-weight:300;
+      color:#4a3020;margin-top:2rem;
+    }
+    .error-page__timer strong{color:#c8853a;}
+
+    @media(max-width:768px){
+      .header__nav{display:none;}
+      .header__burger{display:flex;}
+      .header__cart span{display:none;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="header">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo" aria-label="Brew & Soul — на главную">
+        <div class="header__logo-mark">B</div>
+        <span class="header__logo-text">Brew & Soul</span>
+      </a>
+      <nav class="header__nav" aria-label="Основная навигация">
+        <a href="index.html"    class="header__nav-link">Главная</a>
+        <a href="contacts.html" class="header__nav-link">Контакты</a>
+        <a href="faq.html"      class="header__nav-link">FAQ</a>
+      </nav>
+      <button class="header__cart" aria-label="Корзина">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span>Корзина</span>
+      </button>
+      <button class="header__burger" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false">
+        <span class="header__burger-line"></span>
+        <span class="header__burger-line"></span>
+        <span class="header__burger-line"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══════════════ 404 PAGE ═══════════════ -->
+  <main class="error-page" aria-label="Страница ошибки 404">
+    <div class="error-page__bg"></div>
+
+    <!-- Плавающие частицы кофе -->
+    <div class="error-page__particles" aria-hidden="true" id="particles"></div>
+
+    <div class="error-page__content">
+
+      <!-- Анимированная чашка -->
+      <div class="error-page__cup" aria-hidden="true">
+        <svg viewBox="0 0 120 120" width="120" height="120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Пар -->
+          <path d="M42 28 Q39 20 42 12" stroke="#c8853a" stroke-width="2" stroke-linecap="round" opacity="0.6">
+            <animate attributeName="opacity" values="0.6;0.1;0.6" dur="2s" repeatCount="indefinite"/>
+          </path>
+          <path d="M60 24 Q57 16 60 8" stroke="#c8853a" stroke-width="2" stroke-linecap="round" opacity="0.8">
+            <animate attributeName="opacity" values="0.8;0.1;0.8" dur="2.5s" repeatCount="indefinite"/>
+          </path>
+          <path d="M78 28 Q75 20 78 12" stroke="#c8853a" stroke-width="2" stroke-linecap="round" opacity="0.5">
+            <animate attributeName="opacity" values="0.5;0.1;0.5" dur="1.8s" repeatCount="indefinite"/>
+          </path>
+
+          <!-- Блюдце -->
+          <ellipse cx="60" cy="108" rx="42" ry="6" fill="#2d1200"/>
+          <ellipse cx="60" cy="106" rx="44" ry="7" fill="#3b1a00"/>
+
+          <!-- Чашка -->
+          <path d="M25 44 Q24 86 34 100 Q47 107 60 107 Q73 107 86 100 Q96 86 95 44 Z" fill="#2d1200"/>
+          <!-- Кофе -->
+          <ellipse cx="60" cy="45" rx="32" ry="8" fill="#c8853a" opacity="0.6"/>
+          <!-- Ободок -->
+          <ellipse cx="60" cy="45" rx="35" ry="9" fill="none" stroke="#3b1a00" stroke-width="3"/>
+          <!-- Ручка -->
+          <path d="M94 60 Q115 60 115 74 Q115 88 94 88" stroke="#3b1a00" stroke-width="7" stroke-linecap="round" fill="none"/>
+          <path d="M94 60 Q108 60 108 74 Q108 88 94 88" stroke="#2d1200" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <!-- Надпись на чашке -->
+          <text x="60" y="82" text-anchor="middle" font-family="Playfair Display" font-size="14" fill="#c8853a" font-weight="900" opacity="0.5">?</text>
+        </svg>
+      </div>
+
+      <div class="error-page__code" aria-label="Ошибка 404">404</div>
+      <h1 class="error-page__title">Упс. Эта страница<br><em>растворилась</em>, как сахар в эспрессо</h1>
+      <p class="error-page__text">
+        Возможно, страница переехала или её никогда не существовало.<br>
+        Но хороший кофе — точно существует. Вернёмся к нему?
+      </p>
+
+      <div class="error-page__actions">
+        <a href="index.html"    class="btn btn--primary">На главную</a>
+        <a href="contacts.html" class="btn btn--outline">Связаться с нами</a>
+      </div>
+
+      <nav class="error-page__nav" aria-label="Навигация по сайту">
+        <a href="index.html#catalog" class="error-page__nav-link">☕ Каталог</a>
+        <span class="error-page__nav-separator" aria-hidden="true">·</span>
+        <a href="faq.html" class="error-page__nav-link">❓ FAQ</a>
+        <span class="error-page__nav-separator" aria-hidden="true">·</span>
+        <a href="contacts.html" class="error-page__nav-link">✉️ Контакты</a>
+      </nav>
+
+      <p class="error-page__timer" id="redirectTimer" aria-live="polite" aria-atomic="true">
+        Автоматический переход на главную через <strong id="countdown">15</strong> секунд
+      </p>
+    </div>
+  </main>
+
+  <script>
+    // ── Burger ──
+    const burger = document.getElementById('burgerBtn');
+    const nav    = document.querySelector('.header__nav');
+    burger.addEventListener('click', () => {
+      const open = nav.style.display === 'flex';
+      nav.style.display = open ? 'none' : 'flex';
+      nav.style.flexDirection = 'column';
+      nav.style.position = 'absolute';
+      nav.style.top = '64px'; nav.style.left = '0'; nav.style.right = '0';
+      nav.style.background = 'rgba(26,10,0,0.98)';
+      nav.style.padding = '1rem 1.5rem';
+      burger.setAttribute('aria-expanded', String(!open));
+    });
+
+    // ── Плавающие частицы ──
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.cssText = `
+        left:${Math.random() * 100}%;
+        top:${Math.random() * 100}%;
+        --dur:${5 + Math.random() * 8}s;
+        --delay:${Math.random() * 5}s;
+        opacity:${0.05 + Math.random() * 0.12};
+        width:${4 + Math.random() * 8}px;
+        height:${4 + Math.random() * 8}px;
+      `;
+      container.appendChild(p);
+    }
+
+    // ── Таймер обратного отсчёта ──
+    let seconds = 15;
+    const countdownEl = document.getElementById('countdown');
+    const timerEl     = document.getElementById('redirectTimer');
+
+    const timer = setInterval(() => {
+      seconds--;
+      countdownEl.textContent = seconds;
+      if (seconds <= 0) {
+        clearInterval(timer);
+        timerEl.textContent = 'Переходим...';
+        window.location.href = 'index.html';
+      }
+    }, 1000);
+
+    // Отменить таймер при взаимодействии пользователя
+    document.addEventListener('click', e => {
+      if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+      clearInterval(timer);
+      timerEl.style.display = 'none';
+    }, { once: true });
+  </script>
+</body>
+</html>

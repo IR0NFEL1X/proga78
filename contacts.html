@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Контакты — Brew & Soul</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            espresso: '#1a0a00', roast: '#3b1a00', crema: '#c8853a',
+            latte: '#d4a96a', foam: '#f5efe6', steam: '#fdf8f2',
+          },
+          fontFamily: { display: ['"Playfair Display"', 'serif'], body: ['Lato', 'sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* ═══ BEM: header (общий для всех страниц) ═══ */
+    .header { position:fixed;top:0;left:0;right:0;z-index:50;background-color:rgba(26,10,0,0.95);backdrop-filter:blur(8px);transition:box-shadow 0.3s; }
+    .header--scrolled { box-shadow:0 2px 20px rgba(0,0,0,0.4); }
+    .header__inner { max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:64px; }
+    .header__logo { display:flex;align-items:center;gap:0.5rem;text-decoration:none; }
+    .header__logo-mark { width:36px;height:36px;background:#c8853a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:900;color:#1a0a00;font-size:1rem; }
+    .header__logo-text { font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:#f5efe6;letter-spacing:0.03em; }
+    .header__nav { display:flex;gap:0; }
+    .header__nav-link { font-family:Lato,sans-serif;font-size:0.875rem;font-weight:400;color:#d4a96a;text-decoration:none;padding:0.5rem 1rem;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.2s; }
+    .header__nav-link:hover,.header__nav-link--active { color:#f5efe6; }
+    .header__cart { display:flex;align-items:center;gap:0.5rem;font-family:Lato,sans-serif;font-size:0.875rem;font-weight:700;color:#1a0a00;background:#c8853a;border:none;cursor:pointer;padding:0.5rem 1.25rem;border-radius:2px;letter-spacing:0.05em;text-transform:uppercase;transition:background 0.2s; }
+    .header__cart:hover { background:#d4a96a; }
+    .header__burger { display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px; }
+    .header__burger-line { width:24px;height:2px;background:#d4a96a;border-radius:2px; }
+
+    /* ═══ BEM: page-hero (маленький хедер страницы) ═══ */
+    .page-hero { background:#1a0a00;padding:7rem 0 4rem;position:relative;overflow:hidden; }
+    .page-hero__bg { position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(59,26,0,0.5) 0%,transparent 60%); }
+    .page-hero__inner { position:relative;max-width:1200px;margin:0 auto;padding:0 1.5rem; }
+    .page-hero__eyebrow { font-family:Lato,sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#c8853a;display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem; }
+    .page-hero__eyebrow::before { content:'';display:block;width:32px;height:1px;background:#c8853a; }
+    .page-hero__title { font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(2rem,4vw,3.5rem);color:#f5efe6;line-height:1.1; }
+    .page-hero__title em { color:#c8853a;font-style:italic; }
+    .page-hero__sub { font-family:Lato,sans-serif;font-size:1rem;font-weight:300;color:#d4a96a;margin-top:0.75rem; }
+
+    /* ═══ BEM: section ═══ */
+    .section { padding:5rem 0; }
+    .section--warm { background:#f5efe6; }
+    .section__inner { max-width:1200px;margin:0 auto;padding:0 1.5rem; }
+
+    /* ═══ BEM: contact-grid ═══ */
+    .contact-grid { display:grid;grid-template-columns:3fr 2fr;gap:4rem;align-items:start; }
+
+    /* ═══ BEM: form ═══ */
+    .form { background:white;padding:2.5rem;border-radius:4px;border:1px solid #ede0d0; }
+    .form__title { font-family:'Playfair Display',serif;font-weight:900;font-size:1.75rem;color:#1a0a00;margin-bottom:0.5rem; }
+    .form__subtitle { font-family:Lato,sans-serif;font-size:0.9rem;font-weight:300;color:#6b5540;margin-bottom:2rem;line-height:1.6; }
+    .form__row { display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem; }
+    .form__field { margin-bottom:1rem; }
+    .form__label { display:block;font-family:Lato,sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#1a0a00;margin-bottom:0.5rem; }
+    .form__input,.form__select,.form__textarea {
+      width:100%;font-family:Lato,sans-serif;font-size:0.9rem;font-weight:300;color:#1a0a00;
+      background:#fdf8f2;border:1px solid #ede0d0;border-radius:2px;
+      padding:0.75rem 1rem;outline:none;transition:border-color 0.2s,box-shadow 0.2s;
+      appearance:none; -webkit-appearance:none;
+    }
+    .form__input:focus,.form__select:focus,.form__textarea:focus { border-color:#c8853a;box-shadow:0 0 0 3px rgba(200,133,58,0.1); }
+    .form__select-wrapper { position:relative; }
+    .form__select-arrow { position:absolute;right:1rem;top:50%;transform:translateY(-50%);pointer-events:none;color:#c8853a;font-size:0.75rem; }
+    .form__textarea { resize:vertical;min-height:120px;line-height:1.6; }
+    .form__checkbox-label { display:flex;align-items:flex-start;gap:0.75rem;font-family:Lato,sans-serif;font-size:0.875rem;font-weight:300;color:#6b5540;line-height:1.5;cursor:pointer; }
+    .form__checkbox { width:18px;height:18px;flex-shrink:0;margin-top:2px;accent-color:#c8853a;cursor:pointer; }
+    .form__submit { width:100%;margin-top:1.5rem;font-family:Lato,sans-serif;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;font-size:0.85rem;background:#1a0a00;color:#f5efe6;border:none;cursor:pointer;padding:1rem 2rem;border-radius:2px;transition:background 0.2s; }
+    .form__submit:hover { background:#c8853a;color:#1a0a00; }
+    .form__success { display:none;background:#1a0a00;color:#f5efe6;padding:1.5rem;border-radius:4px;text-align:center;margin-top:1rem; }
+    .form__success-icon { font-size:2rem;margin-bottom:0.5rem; }
+    .form__success-title { font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;margin-bottom:0.5rem; }
+    .form__success-text { font-family:Lato,sans-serif;font-size:0.875rem;font-weight:300;color:#d4a96a; }
+
+    /* ═══ BEM: contact-info ═══ */
+    .contact-info { display:flex;flex-direction:column;gap:2rem; }
+    .contact-card { background:white;padding:1.75rem;border-radius:4px;border:1px solid #ede0d0; }
+    .contact-card__icon { font-size:1.75rem;margin-bottom:0.75rem; }
+    .contact-card__title { font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:#1a0a00;margin-bottom:0.5rem; }
+    .contact-card__text { font-family:Lato,sans-serif;font-size:0.875rem;font-weight:300;color:#6b5540;line-height:1.7; }
+    .contact-card__link { color:#c8853a;text-decoration:none;transition:color 0.2s; }
+    .contact-card__link:hover { color:#3b1a00; }
+
+    /* Карта-заглушка */
+    .map-placeholder { background:linear-gradient(135deg,#1a0a00,#2d1200);border-radius:4px;overflow:hidden;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;margin-top:2rem;border:1px solid #3b1a00; }
+    .map-placeholder__pin { text-align:center;position:relative;z-index:1; }
+    .map-placeholder__icon { font-size:2.5rem;display:block;margin-bottom:0.5rem; }
+    .map-placeholder__label { font-family:Lato,sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#c8853a; }
+    .map-placeholder__addr { font-family:Lato,sans-serif;font-size:0.875rem;font-weight:300;color:#d4a96a;margin-top:0.25rem; }
+
+    /* ═══ BEM: footer ═══ */
+    .footer { background:#0d0500;padding:4rem 0 2rem; }
+    .footer__inner { max-width:1200px;margin:0 auto;padding:0 1.5rem; }
+    .footer__grid { display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,0.06); }
+    .footer__brand-title { font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;color:#f5efe6;margin-bottom:0.75rem; }
+    .footer__brand-text { font-family:Lato,sans-serif;font-size:0.875rem;font-weight:300;color:#6b5540;line-height:1.7;margin-bottom:1.5rem;max-width:260px; }
+    .footer__socials { display:flex;gap:0.75rem; }
+    .footer__social { width:36px;height:36px;border:1px solid rgba(200,133,58,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c8853a;font-size:0.75rem;text-decoration:none;transition:all 0.2s; }
+    .footer__social:hover { background:#c8853a;color:#1a0a00;border-color:#c8853a; }
+    .footer__col-title { font-family:Lato,sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#c8853a;margin-bottom:1.25rem; }
+    .footer__links { list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.6rem; }
+    .footer__link { font-family:Lato,sans-serif;font-size:0.875rem;font-weight:300;color:#6b5540;text-decoration:none;transition:color 0.2s; }
+    .footer__link:hover { color:#d4a96a; }
+    .footer__bottom { display:flex;align-items:center;justify-content:space-between;padding-top:2rem;flex-wrap:wrap;gap:1rem; }
+    .footer__copy { font-family:Lato,sans-serif;font-size:0.75rem;font-weight:300;color:#4a3020;letter-spacing:0.05em; }
+
+    @media(max-width:768px) {
+      .contact-grid { grid-template-columns:1fr; }
+      .form__row { grid-template-columns:1fr; }
+      .footer__grid { grid-template-columns:1fr 1fr;gap:2rem; }
+      .header__nav { display:none; }
+      .header__burger { display:flex; }
+      .header__cart span { display:none; }
+    }
+    @media(max-width:480px) { .footer__grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body style="background:#fdf8f2;">
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo" aria-label="Brew & Soul — на главную">
+        <div class="header__logo-mark">B</div>
+        <span class="header__logo-text">Brew & Soul</span>
+      </a>
+      <nav class="header__nav" aria-label="Основная навигация">
+        <a href="index.html"    class="header__nav-link">Главная</a>
+        <a href="contacts.html" class="header__nav-link header__nav-link--active">Контакты</a>
+        <a href="faq.html"      class="header__nav-link">FAQ</a>
+      </nav>
+      <button class="header__cart" aria-label="Корзина">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span>Корзина</span>
+      </button>
+      <button class="header__burger" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false">
+        <span class="header__burger-line"></span>
+        <span class="header__burger-line"></span>
+        <span class="header__burger-line"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══════════════ PAGE HERO ═══════════════ -->
+  <section class="page-hero" aria-label="Заголовок страницы">
+    <div class="page-hero__bg"></div>
+    <div class="page-hero__inner">
+      <p class="page-hero__eyebrow">Мы на связи</p>
+      <h1 class="page-hero__title">Контакты &<br><em>Отзывы</em></h1>
+      <p class="page-hero__sub">Напишите нам или оставьте отзыв — мы читаем каждое сообщение</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ MAIN CONTENT ═══════════════ -->
+  <section class="section section--warm">
+    <div class="section__inner">
+      <div class="contact-grid">
+
+        <!-- Форма -->
+        <div>
+          <form class="form" id="feedbackForm" novalidate>
+            <h2 class="form__title">Оставьте отзыв</h2>
+            <p class="form__subtitle">Ваш опыт помогает нам становиться лучше. Расскажите о своём впечатлении от кофе или обслуживания.</p>
+
+            <div class="form__row">
+              <div class="form__field">
+                <label class="form__label" for="name">Имя</label>
+                <input class="form__input" type="text" id="name" name="name" placeholder="Ваше имя" required autocomplete="given-name" />
+              </div>
+              <div class="form__field">
+                <label class="form__label" for="email">Email</label>
+                <input class="form__input" type="email" id="email" name="email" placeholder="example@email.com" required autocomplete="email" />
+              </div>
+            </div>
+
+            <div class="form__field">
+              <label class="form__label" for="topic">Тема</label>
+              <div class="form__select-wrapper">
+                <select class="form__select" id="topic" name="topic" required>
+                  <option value="" disabled selected>Выберите тему</option>
+                  <option value="review">Отзыв о кофе</option>
+                  <option value="order">Вопрос по заказу</option>
+                  <option value="delivery">Доставка</option>
+                  <option value="subscription">Подписка</option>
+                  <option value="suggestion">Предложение</option>
+                  <option value="thanks">Благодарность</option>
+                  <option value="other">Другое</option>
+                </select>
+                <span class="form__select-arrow">▼</span>
+              </div>
+            </div>
+
+            <div class="form__field">
+              <label class="form__label" for="message">Сообщение</label>
+              <textarea class="form__textarea" id="message" name="message" placeholder="Поделитесь своим опытом или задайте вопрос..." rows="6" required></textarea>
+            </div>
+
+            <div class="form__field">
+              <label class="form__checkbox-label">
+                <input class="form__checkbox" type="checkbox" id="consent" name="consent" required />
+                Я согласен(а) на обработку персональных данных в соответствии с <a href="#" style="color:#c8853a;text-decoration:underline;">политикой конфиденциальности</a>
+              </label>
+            </div>
+
+            <button class="form__submit" type="submit">Отправить сообщение</button>
+
+            <div class="form__success" id="formSuccess">
+              <div class="form__success-icon">☕</div>
+              <div class="form__success-title">Сообщение отправлено!</div>
+              <p class="form__success-text">Мы ответим вам в течение одного рабочего дня. А пока — заварите чашечку.</p>
+            </div>
+          </form>
+        </div>
+
+        <!-- Контактные карточки -->
+        <div class="contact-info" aria-label="Контактная информация">
+          <div class="contact-card">
+            <div class="contact-card__icon">📍</div>
+            <h3 class="contact-card__title">Наш адрес</h3>
+            <p class="contact-card__text">
+              Москва,<br>
+              просп. Вернадского, 78с3<br>
+              <span style="color:#c8853a;font-size:0.8rem;">Пн–Пт: 10:00–20:00</span><br>
+              <span style="color:#c8853a;font-size:0.8rem;">Сб–Вс: 11:00–18:00</span>
+            </p>
+          </div>
+
+          <div class="contact-card">
+            <div class="contact-card__icon">📞</div>
+            <h3 class="contact-card__title">Телефон</h3>
+            <p class="contact-card__text">
+              <a href="tel:+74996008080" class="contact-card__link">+7 (499) 600-80-80</a><br>
+              <span style="font-size:0.8rem;margin-top:0.25rem;display:block;">Ответим с 10:00 до 20:00</span>
+            </p>
+          </div>
+
+          <div class="contact-card">
+            <div class="contact-card__icon">✉️</div>
+            <h3 class="contact-card__title">Email</h3>
+            <p class="contact-card__text">
+              <a href="/cdn-cgi/l/email-protection#f39b969f9f9cb391819684929d97809c869fdd8186" class="contact-card__link"><span class="__cf_email__" data-cfemail="cda5a8a1a1a28dafbfa8baaca3a9bea2b8a1e3bfb8">[email&#160;protected]</span></a><br>
+              <span style="font-size:0.8rem;margin-top:0.25rem;display:block;">Ответим в течение 24 часов</span>
+            </p>
+          </div>
+
+          <div class="contact-card">
+            <div class="contact-card__icon">💬</div>
+            <h3 class="contact-card__title">Мессенджеры</h3>
+            <p class="contact-card__text">
+              <a href="#" class="contact-card__link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 1 0 24 12 12 12 0 0 0 11.944 0zm5.054 8.198-1.99 9.375c-.147.66-.537.82-1.086.51l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.332-.373-.12L7.869 13.9l-2.93-.916c-.637-.2-.65-.637.132-.943l11.432-4.407c.53-.194.995.12.82.944l.221-.38z"/></svg> Telegram: @brewandsoul</a><br>
+              <a href="#" class="contact-card__link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 13.5h-1.6l-1.9-3.1-1.9 3.1H8.5l2.7-4.1-2.5-3.9h1.6l1.7 2.8 1.7-2.8H15l-2.5 3.9 2.5 3.9-.5.1z"/></svg> MAX: @brewandsoul</a><br>
+              <a href="#" class="contact-card__link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.692 17.123h-1.744c-.66 0-.862-.523-2.045-1.72-1.03-1-1.49-.9-1.74-.9-.356 0-.458.1-.458.6v1.57c0 .427-.136.683-1.254.683-1.846 0-3.896-1.12-5.337-3.2C4.624 10.857 4 8.408 4 7.938c0-.252.1-.486.6-.486h1.744c.447 0 .616.2.786.67 1.09 2.8 2.615 4.4 3.3 4.4.253 0 .367-.1.367-.7V9.686c-.073-1.27-.745-1.37-.745-1.82 0-.218.18-.438.458-.438h2.741c.375 0 .508.2.508.64v3.45c0 .37.162.5.26.5.252 0 .46-.13.92-.59 1.42-1.59 2.435-4.04 2.435-4.04.134-.27.375-.52.82-.52h1.744c.526 0 .64.27.526.64-.22 1.02-2.37 4.056-2.37 4.056-.195.32-.266.46 0 .82.195.27.833.83 1.26 1.33.78.9 1.38 1.65 1.54 2.17.174.52-.09.78-.594.78z"/></svg> ВКонтакте: vk.com/brewandsoul</a><br>
+              <a href="#" class="contact-card__link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5a3 3 0 00-2.1 2.1A31 31 0 000 12a31 31 0 00.5 5.8 3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1A31 31 0 0024 12a31 31 0 00-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg> YouTube: youtube.com/@brewandsoul</a>
+            </p>
+          </div>
+
+          <!-- Карта-заглушка -->
+          <div class="map-placeholder" role="img" aria-label="Карта расположения офиса">
+            <!-- SVG-стилизованная карта -->
+            <svg viewBox="0 0 400 225" width="100%" height="100%" style="position:absolute;inset:0;" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Сетка улиц -->
+              <line x1="0" y1="75" x2="400" y2="75" stroke="#3b1a00" stroke-width="8"/>
+              <line x1="0" y1="150" x2="400" y2="150" stroke="#3b1a00" stroke-width="6"/>
+              <line x1="120" y1="0" x2="120" y2="225" stroke="#3b1a00" stroke-width="6"/>
+              <line x1="280" y1="0" x2="280" y2="225" stroke="#3b1a00" stroke-width="8"/>
+              <!-- Кварталы -->
+              <rect x="130" y="85" width="140" height="55" fill="#2d1200" opacity="0.5" rx="2"/>
+              <rect x="0" y="85" width="110" height="55" fill="#2d1200" opacity="0.3" rx="2"/>
+              <rect x="290" y="85" width="110" height="55" fill="#2d1200" opacity="0.3" rx="2"/>
+              <!-- Метки улиц -->
+              <text x="200" y="68" text-anchor="middle" font-family="Lato" font-size="8" fill="#d4a96a" opacity="0.7">просп. Вернадского</text>
+              <!-- Маркер -->
+              <circle cx="200" cy="112" r="14" fill="#c8853a" opacity="0.3"/>
+              <circle cx="200" cy="112" r="8" fill="#c8853a"/>
+              <circle cx="200" cy="112" r="4" fill="#1a0a00"/>
+              <!-- Пульсация -->
+              <circle cx="200" cy="112" r="14" fill="none" stroke="#c8853a" stroke-width="2" opacity="0.6">
+                <animate attributeName="r" values="14;24;14" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+            <div class="map-placeholder__pin">
+              <span class="map-placeholder__label">Brew & Soul</span>
+              <p class="map-placeholder__addr">просп. Вернадского, 78с3</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand-title">Brew & Soul</div>
+          <p class="footer__brand-text">Обжарочня спешелти-кофе в Москве. С 2025 года привозим лучшие зёрна с ферм напрямую к вашей чашке.</p>
+          <div class="footer__socials">
+            <a href="#" class="footer__social" aria-label="Telegram"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 1 0 24 12 12 12 0 0 0 11.944 0zm5.054 8.198-1.99 9.375c-.147.66-.537.82-1.086.51l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.332-.373-.12L7.869 13.9l-2.93-.916c-.637-.2-.65-.637.132-.943l11.432-4.407c.53-.194.995.12.82.944l.221-.38z"/></svg></a>
+            <a href="#" class="footer__social" aria-label="ВКонтакте"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.692 17.123h-1.744c-.66 0-.862-.523-2.045-1.72-1.03-1-1.49-.9-1.74-.9-.356 0-.458.1-.458.6v1.57c0 .427-.136.683-1.254.683-1.846 0-3.896-1.12-5.337-3.2C4.624 10.857 4 8.408 4 7.938c0-.252.1-.486.6-.486h1.744c.447 0 .616.2.786.67 1.09 2.8 2.615 4.4 3.3 4.4.253 0 .367-.1.367-.7V9.686c-.073-1.27-.745-1.37-.745-1.82 0-.218.18-.438.458-.438h2.741c.375 0 .508.2.508.64v3.45c0 .37.162.5.26.5.252 0 .46-.13.92-.59 1.42-1.59 2.435-4.04 2.435-4.04.134-.27.375-.52.82-.52h1.744c.526 0 .64.27.526.64-.22 1.02-2.37 4.056-2.37 4.056-.195.32-.266.46 0 .82.195.27.833.83 1.26 1.33.78.9 1.38 1.65 1.54 2.17.174.52-.09.78-.594.78z"/></svg></a>
+            <a href="#" class="footer__social" aria-label="MAX"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 13.5h-1.6l-1.9-3.1-1.9 3.1H8.5l2.7-4.1-2.5-3.9h1.6l1.7 2.8 1.7-2.8H15l-2.5 3.9 2.5 3.9-.5.1z"/></svg></a>
+            <a href="#" class="footer__social" aria-label="YouTube"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5a3 3 0 00-2.1 2.1A31 31 0 000 12a31 31 0 00.5 5.8 3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1A31 31 0 0024 12a31 31 0 00-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg></a>
+          </div>
+        </div>
+        <div>
+          <div class="footer__col-title">Магазин</div>
+          <ul class="footer__links">
+            <li><a href="index.html#catalog" class="footer__link">Весь каталог</a></li>
+            <li><a href="#" class="footer__link">Подписка</a></li>
+            <li><a href="#" class="footer__link">Наборы</a></li>
+            <li><a href="#" class="footer__link">Аксессуары</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-title">Компания</div>
+          <ul class="footer__links">
+            <li><a href="index.html#about" class="footer__link">О нас</a></li>
+            <li><a href="faq.html" class="footer__link">FAQ</a></li>
+            <li><a href="#" class="footer__link">Блог</a></li>
+            <li><a href="contacts.html" class="footer__link">Контакты</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-title">Контакты</div>
+          <ul class="footer__links">
+            <li><a href="/cdn-cgi/l/email-protection#620a070e0e0d2200100715030c06110d170e4c1017" class="footer__link"><span class="__cf_email__" data-cfemail="f59d9099999ab597879082949b91869a8099db8780">[email&#160;protected]</span></a></li>
+            <li><a href="tel:+74996008080" class="footer__link">+7 (499) 600-80-80</a></li>
+            <li><span class="footer__link">Москва,<br>просп. Вернадского, 78с3</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copy">© 2026 Brew & Soul. Все права защищены.</p>
+        <p class="footer__copy">Политика конфиденциальности · Условия доставки</p>
+      </div>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // Header scroll
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('header--scrolled', window.scrollY > 20);
+    });
+
+    // Burger
+    const burger = document.getElementById('burgerBtn');
+    const nav    = document.querySelector('.header__nav');
+    burger.addEventListener('click', () => {
+      const open = nav.style.display === 'flex';
+      nav.style.display = open ? 'none' : 'flex';
+      nav.style.flexDirection = 'column';
+      nav.style.position = 'absolute';
+      nav.style.top = '64px'; nav.style.left = '0'; nav.style.right = '0';
+      nav.style.background = 'rgba(26,10,0,0.98)';
+      nav.style.padding = '1rem 1.5rem';
+      burger.setAttribute('aria-expanded', String(!open));
+    });
+
+    // Форма — эмуляция отправки
+    document.getElementById('feedbackForm').addEventListener('submit'), function(e){
+      e.preventDefault();
+      const form    = this;
+      const success = document.getElementById('formSuccess');
+      const btn     = form.querySelector('.form__submit');
+    }
+      // Простая валидация
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+
+      btn.textContent = 'Отправляем...';
+      btn.disabled = true;
+
+      setTimeout();{
+        form.querySelectorAll
+      }
+      
